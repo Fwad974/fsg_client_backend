@@ -1,0 +1,12 @@
+[
+  {"testName": "HIV 1",        "assayCategory": "Real-time PCR",   "slug": "hiv-1"},
+  {"testName": "HIV 2",        "assayCategory": "Real-time PCR",   "slug": "hiv-2"},
+  {"testName": "Hepatitis C",  "assayCategory": "Real-time PCR",   "slug": "hepatitis-c"},
+  {"testName": "Hepatitis B",  "assayCategory": "Real-time PCR",   "slug": "hepatitis-b"},
+  {"testName": "NIPT",         "assayCategory": "Sequencing-based","slug": "nipt"},
+  {"testName": "PGS",          "assayCategory": "Sequencing-based","slug": "pgs"},
+  {"testName": "HLA typing",   "assayCategory": "Sequencing-based","slug": "hla-typing"},
+  {"testName": "BRCA panel",   "assayCategory": "Sequencing-based","slug": "brca-panel"},
+  {"testName": "Exomes",       "assayCategory": "Sequencing-based","slug": "exomes"},
+  {"testName": "Metagenomics", "assayCategory": "Sequencing-based","slug": "metagenomics"}
+]
