@@ -1,0 +1,71 @@
+{
+  "solidity.compileUsingRemoteVersion": "0.5.8",
+  // "material-icon-theme.showUpdateMessage": false,
+  // "workbench.iconTheme": "material-icon-theme",
+  "workbench.statusBar.visible": true,
+  "workbench.sideBar.location": "left",
+  // "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  // "javascript.validate.enable": false,
+  // "js/ts.implicitProjectConfig.checkJs": false,
+  // "typescript.validate.enable": false,
+  "standard.enable": true,
+  "standard.autoFixOnSave": true,
+  "standard.validate": [
+    {
+      "language": "javascript",
+      "autoFix": true
+    },
+    {
+      "language": "javascriptreact",
+      "autoFix": true
+    }
+  ],
+  "standard.options": {
+    "parser": "@babel/eslint-parser",
+    "env": {
+      "jest": true,
+      "browser": true,
+      "node": true
+    },
+    "globals": ["artifacts", "tronWeb", "contract", "before", "assert", "after"]
+  },
+  "editor.tabSize": 2,
+  // "editor.renderWhitespace": "all",
+  "editor.minimap.enabled": true,
+  "editor.renderControlCharacters": false,
+  "editor.renderFinalNewline": "on",
+  "editor.rulers": [120],
+  "editor.multiCursorModifier": "alt",
+  "editor.autoIndent": "full",
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "javascript.format.insertSpaceAfterConstructor": true,
+  // "breadcrumbs.enabled": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "cSpell.words": [
+    "accountsid"
+  ],
+  "solidity.linter": "solhint",
+  // "todohighlight.defaultStyle": {
+  //   "color": "red",
+  //   "backgroundColor": "rgba(0,0,0,.2)",
+  //   "overviewRulerColor": "rgba(0,0,0,.2)",
+  //   "cursor": "pointer",
+  //   "border": "1px solid red",
+  //   "borderRadius": "5px",
+  //   "isWholeLine": true
+  // },
+  "cSpell.ignoreWords": ["middlewares"]
+}

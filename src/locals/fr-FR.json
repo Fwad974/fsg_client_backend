@@ -1,0 +1,23 @@
+{
+	"InternalServerError": "InternalServerError",
+	"Internal Server Error": "Internal Server Error",
+	"RequestInputValidationError": "RequestInputValidationError",
+	"Please check the request data": "Please check the request data",
+	"SomethingWentWrong": "SomethingWentWrong",
+	"An unexpected error occurred.": "An unexpected error occurred.",
+	"ReferenceError": "ReferenceError",
+	"PhoneNotVerified": "PhoneNotVerified",
+	"The phone number has not been verified.": "The phone number has not been verified.",
+	"UserNotExists": "UserNotExists",
+	"The specified user does not exist.": "The specified user does not exist.",
+	"ResponseInputValidationError": "ResponseInputValidationError",
+	"Response validation failed please refer json schema of response": "Response validation failed please refer json schema of response",
+	"UserNameAlreadyTakenErrorType": "UserNameAlreadyTakenErrorType",
+	"The username is already taken.": "The username is already taken.",
+	"UserNameOrPhoneAlreadyTaken": "UserNameOrPhoneAlreadyTaken",
+	"Account already exists with this username or phone number.": "Account already exists with this username or phone number.",
+	"InvalidToken": "InvalidToken",
+	"The access token is missing or has expired.": "The access token is missing or has expired.",
+	"SequelizeDatabaseError": "SequelizeDatabaseError",
+	"Error": "Error"
+}
