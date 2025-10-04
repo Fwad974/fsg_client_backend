@@ -8,6 +8,7 @@ import UpdateProfileService from '../../services/user/updateProfile.service'
 import VerifyEmailOtpService from '../../services/user/verifyUpdatedEmailToken.service'
 import createContactRequestService from '../../services/user/createContactRequest.service'
 import LogoutService from '../../services/user/logout.service'
+import VerifySmsOtpSignupCodeService from '../../services/phone/verifySmsOtpSignup.service'
 
 /**
  * User Controller for handling all the request of /user path
@@ -168,6 +169,23 @@ export default class UserController {
   static async createContactRequest (req, res, next) {
     try {
       const { result, successful, errors } = await createContactRequestService.execute(req.body, req.context)
+      sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+    /**
+   * It is responsible for updating the user's profile of the authenticated user
+    * @static
+    * @param {object} req - object contains all the request params sent from the client
+    * @param {object} res - object contains all the response params sent to the client
+    * @param {function} next - function to execute next middleware
+    * @memberof UserController
+   */
+  static async verifySmsOtpSignup (req, res, next) {
+    try {
+      const { result, successful, errors } = await VerifySmsOtpSignupCodeService.execute(req.body, req.context)
       sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
     } catch (error) {
       next(error)

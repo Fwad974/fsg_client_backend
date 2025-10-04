@@ -215,24 +215,28 @@ const putUpdateProfileSchemas = {
   }
 }
 
-const verifyEmailOtpSchemas = {
+const verifySmsOtpSchemas = {
   bodySchema: {
     type: 'object',
     properties: {
-      OTP: {
-        type: 'string'
-      }
+      otp: { type: 'string' },
+      phone: {
+        type: 'string',
+        pattern: '^\\+?[0-9]{10,15}$',
+        minLength: 10,
+        maxLength: 16
+      },
     },
-    required: ['OTP']
+    required: ['otp', 'phone']
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
         message: { type: 'string' },
-        email: { type: 'string' }
+        phone: { type: 'string' }
       },
-      required: ['message', 'email']
+      required: ['message']
     }
   }
 }
@@ -373,10 +377,9 @@ userRoutes
   .route('/verify-phone-otp')
   .put(
     contextMiddleware(true),
-    authenticationMiddleWare,
-    requestValidationMiddleware(verifyEmailOtpSchemas),
-    UserController.verifyEmailOtp,
-    responseValidationMiddleware(verifyEmailOtpSchemas)
+    requestValidationMiddleware(verifySmsOtpSchemas),
+    UserController.verifySmsOtpSignup,
+    responseValidationMiddleware(verifySmsOtpSchemas)
   )
 
   userRoutes
