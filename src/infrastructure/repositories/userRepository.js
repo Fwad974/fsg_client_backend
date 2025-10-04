@@ -71,12 +71,32 @@ export default class UserRepository extends IUserRepository {
     const { User: UserModel } = models
 
     const {
-      attributes = ['id', 'uuid', 'phone']
+      attributes = ['id', 'uuid', 'phone'],
+      transaction
     } = options
 
     const user = await UserModel.findOne({
       where: { phone },
       attributes,
+      transaction,
+      raw: true
+    })
+
+    return user
+  }
+
+  static async findByPhoneAndNotVerify (phone, options= {}) {
+    const { User: UserModel } = models
+
+    const {
+      attributes = ['id', 'uuid', 'phone'],
+      transaction
+    } = options
+
+    const user = await UserModel.findOne({
+      where: { phone, phoneVerified: false },
+      attributes,
+      transaction,
       raw: true
     })
 

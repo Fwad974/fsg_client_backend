@@ -1067,3 +1067,11 @@ export const UserNameOrPhoneAlreadyTakenErrorType = {
   description: 'Account already exists with this username or phone number.',
   errorCode: 5
 }
+
+export const UserWithPhoneNumberErrorType = {
+  name: 'UserWithPhoneNumber',
+  statusCode: StatusCodes.BAD_REQUEST,
+  isOperational: true,
+  description: 'User by this phone number dose not exists.',
+  errorCode: 6
+}
