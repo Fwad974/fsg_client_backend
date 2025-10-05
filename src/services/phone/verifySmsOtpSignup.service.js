@@ -22,6 +22,7 @@ export default class VerifySmsOtpSignupCodeService extends ServiceBase {
     } = this.args
 
     const userExists = await UserRepository.findByPhoneOrUserNameAndNotVerify(userNameOrPhone, { attributes: ['id'], transaction: sequelizeTransaction })
+    logger.info('VerifySmsOtpCodeService: ', { message: 'this is the userExists: ', context: { userExists: JSON.stringify(userExists) } })
 
     if (!userExists) {
       return this.addError('UserWithPhoneNumberErrorType')
