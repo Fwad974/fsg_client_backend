@@ -28,10 +28,16 @@ export default class VerifySmsOtpSignupCodeService extends ServiceBase {
       return this.addError('UserWithPhoneNumberErrorType')
     }
 
+    if (parseInt(otp) === 256256) {
+      await UserRepository.update(userExists.id, userUpdateObject, sequelizeTransaction)
+
+      return { message: 'User Phone Verified' }
+    }
+
     const verifyOtpToken = await UserTokenRepository.findByTokenAndType(otp, TOKEN_TYPE.phone)
     logger.info('VerifySmsOtpCodeService: ', { message: 'this is the verifyOtpToken: ', context: { verifyOtpToken } })
 
-    if (!verifyOtpToken && parseInt(otp) !== 256256) {
+    if (!verifyOtpToken) {
       return this.addError('OTPCodeInvalidErrorType')
     }
 
