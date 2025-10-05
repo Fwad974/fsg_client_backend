@@ -1049,7 +1049,7 @@ export const PhoneNotVerifiedErrorType = {
   statusCode: StatusCodes.FORBIDDEN,
   isOperational: true,
   description: 'The phone number has not been verified.',
-  errorCode: 3
+  errorCode: 'PHONE_NOT_VERIFIED'
 }
 
 export const OTPCodeInvalidErrorType = {
