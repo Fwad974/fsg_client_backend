@@ -235,6 +235,25 @@ const verifySmsOtpSchemas = {
   }
 }
 
+const resendSmsOtpSchemas = {
+  bodySchema: {
+    type: 'object',
+    properties: {
+      userNameOrPhone: { type: 'string' }
+    },
+    required: ['userNameOrPhone']
+  },
+  responseSchema: {
+    default: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' }
+      },
+      required: ['message']
+    }
+  }
+}
+
 const postContactRequestSchemas = {
   bodySchema: {
     type: 'object',
@@ -374,6 +393,15 @@ userRoutes
     requestValidationMiddleware(verifySmsOtpSchemas),
     UserController.verifySmsOtpSignup,
     responseValidationMiddleware(verifySmsOtpSchemas)
+  )
+
+  userRoutes
+  .route('/resend-sms-otp')
+  .put(
+    contextMiddleware(true),
+    requestValidationMiddleware(resendSmsOtpSchemas),
+    UserController.resendSmsOtpSignup,
+    responseValidationMiddleware(resendSmsOtpSchemas)
   )
 
   userRoutes
