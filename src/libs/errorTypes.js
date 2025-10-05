@@ -1053,11 +1053,11 @@ export const PhoneNotVerifiedErrorType = {
 }
 
 export const OTPCodeInvalidErrorType = {
-  name: 'OTPCodeInvalid',
-  statusCode: StatusCodes.FORBIDDEN,
+  name: 'OtpCodeInvalid',
+  statusCode: StatusCodes.BAD_REQUEST,
   isOperational: true,
   description: 'The otp code is invalid.',
-  errorCode: 4
+  errorCode: 'INVALID_OTP'
 }
 
 export const UserNameOrPhoneAlreadyTakenErrorType = {
