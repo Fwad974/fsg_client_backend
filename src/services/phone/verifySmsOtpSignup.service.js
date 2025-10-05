@@ -18,10 +18,10 @@ export default class VerifySmsOtpSignupCodeService extends ServiceBase {
 
     const {
       otp,
-      phone
+      userNameOrPhone
     } = this.args
 
-    const userExists = await UserRepository.findByPhoneAndNotVerify(phone,{ attributes: ['id'], transaction: sequelizeTransaction })
+    const userExists = await UserRepository.findByPhoneOrUserNameAndNotVerify(userNameOrPhone, { attributes: ['id'], transaction: sequelizeTransaction })
 
     if (!userExists) {
       return this.addError('UserWithPhoneNumberErrorType')

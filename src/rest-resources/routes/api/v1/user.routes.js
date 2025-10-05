@@ -220,21 +220,15 @@ const verifySmsOtpSchemas = {
     type: 'object',
     properties: {
       otp: { type: 'string' },
-      phone: {
-        type: 'string',
-        pattern: '^\\+?[0-9]{10,15}$',
-        minLength: 10,
-        maxLength: 16
-      },
+      userNameOrPhone: { type: 'string' },
     },
-    required: ['otp', 'phone']
+    required: ['otp', 'userNameOrPhone']
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
-        message: { type: 'string' },
-        phone: { type: 'string' }
+        message: { type: 'string' }
       },
       required: ['message']
     }

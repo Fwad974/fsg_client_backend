@@ -85,7 +85,7 @@ export default class UserRepository extends IUserRepository {
     return user
   }
 
-  static async findByPhoneAndNotVerify (phone, options= {}) {
+  static async findByPhoneOrUserNameAndNotVerify (userNameOrPhone, options= {}) {
     const { User: UserModel } = models
 
     const {
@@ -93,8 +93,20 @@ export default class UserRepository extends IUserRepository {
       transaction
     } = options
 
+    const whereCondition = {
+      phoneVerified: false,
+      [Op.or]: [
+        {
+          userName: userNameOrPhone
+        },
+        {
+          phone: userNameOrPhone
+        }
+      ]
+    }
+
     const user = await UserModel.findOne({
-      where: { phone, phoneVerified: false },
+      where: whereCondition,
       attributes,
       transaction,
       raw: true
