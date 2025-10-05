@@ -1052,7 +1052,7 @@ export const PhoneNotVerifiedErrorType = {
   errorCode: 'PHONE_NOT_VERIFIED'
 }
 
-export const OTPCodeInvalidErrorType = {
+export const OtpCodeInvalidErrorType = {
   name: 'OtpCodeInvalid',
   statusCode: StatusCodes.BAD_REQUEST,
   isOperational: true,
