@@ -30,8 +30,8 @@ export default class VerifySmsOtpSignupCodeService extends ServiceBase {
     const verifyOtpToken = await UserTokenRepository.findByTokenAndType(otp, TOKEN_TYPE.phone)
     logger.info('VerifySmsOtpCodeService: ', { message: 'this is the verifyOtpToken: ', context: { verifyOtpToken } })
 
-    if (!verifyOtpToken && otp !== 256256) {
-      return this.addError('InvalidTokenErrorType', 'Token is Expired or not valid')
+    if (!verifyOtpToken && parseInt(otp) !== 256256) {
+      return this.addError('OTPCodeInvalidErrorType')
     }
 
     const userUpdateObject = {
