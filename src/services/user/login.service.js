@@ -6,7 +6,7 @@ import ServiceBase from '../../libs/serviceBase'
 import { setData } from '../../helpers/redis.helpers'
 import { getUserTokenCacheKey } from '../../utils/user.utils'
 import UserRepository from '../../infrastructure/repositories/userRepository'
-import GenerateVerificationCodeService from '../phone/generateVerificationCode.service'
+import GenerateVerificationCodeService from '../generateCode/generateVerificationCode.service'
 import { TOKEN_TYPE } from '../../libs/constants'
 import Logger from '../../libs/logger'
 

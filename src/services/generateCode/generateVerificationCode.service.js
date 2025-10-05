@@ -46,7 +46,7 @@ export default class GenerateVerificationCodeService extends ServiceBase {
     logger.info('GenerateVerificationCodeService: ', { message: 'this is the userHasToken', context: { userHasToken: JSON.stringify(userHasToken) } })
 
     if (userHasToken) {
-      token = randomInt(1000, 10000).toString();
+      token = randomInt(100000, 1000000).toString();
 
       const updateTokenObject = {
         token,
@@ -58,7 +58,7 @@ export default class GenerateVerificationCodeService extends ServiceBase {
 
       await UserTokenRepository.update(userHasToken.id, updateTokenObject, sequelizeTransaction)
     } else {
-      token = randomInt(1000, 10000).toString();
+      token = randomInt(100000, 1000000).toString();
 
       const createTokenObject = {
         userId,

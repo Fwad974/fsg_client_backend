@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
 import { SALT_ROUNDS } from '../../libs/constants'
-import GenerateVerificationCodeService from '../phone/generateVerificationCode.service'
+import GenerateVerificationCodeService from '../generateCode/generateVerificationCode.service'
 import { TOKEN_TYPE } from '../../libs/constants'
 import _ from 'lodash'
 

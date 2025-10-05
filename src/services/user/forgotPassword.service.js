@@ -1,5 +1,5 @@
 import ServiceBase from '../../libs/serviceBase'
-import GenerateVerificationCodeService from '../phone/generateVerificationCode.service'
+import GenerateVerificationCodeService from '../generateCode/generateVerificationCode.service'
 import UserRepository from '../../infrastructure/repositories/userRepository'
 import { TOKEN_TYPE } from '../../libs/constants'
 
