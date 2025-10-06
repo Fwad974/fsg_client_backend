@@ -15,9 +15,13 @@ const schema = {
   properties: {
     userNameOrPhone: { type: 'string' },
     password: { type: 'string' },
-    userToken: { type: 'number' }
+    userToken: { type: 'number' },
+    userType: {
+      type: "string",
+      enum: ["individual", "corporate", "doctor", "payment"]
+    }
   },
-  required: ['userNameOrPhone', 'password']
+  required: ['userNameOrPhone', 'password', 'userType']
 }
 
 const constraints = ajv.compile(schema)
@@ -43,10 +47,11 @@ export default class LoginService extends ServiceBase {
     const userObj = {
       userNameOrPhone: this.args.userNameOrPhone?.trim()?.toLowerCase?.(),
       password: this.args.password?.trim(),
-      userToken: this.args.userToken
+      userToken: this.args.userToken,
+      userType: this.args.userType
     }
 
-    const user = await UserRepository.findByUserNameOrPhone(userObj.userNameOrPhone, { attributes: ['id', 'encryptedPassword', 'phone', 'userName', 'signInCount', 'phoneVerified', 'uuid', 'firstName', 'lastName', 'email'] })
+    const user = await UserRepository.findByUserNameOrPhoneAndType(userObj.userNameOrPhone, userObj.userType, { attributes: ['id', 'encryptedPassword', 'phone', 'userName', 'signInCount', 'phoneVerified', 'uuid', 'firstName', 'lastName', 'email'] })
     Logger.info('LoginService: ', { message: 'this is the user', context: { user: JSON.stringify(user) } })
 
     if (!user) return this.addError('UserNotExistsErrorType')

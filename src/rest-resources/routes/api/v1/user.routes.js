@@ -45,12 +45,12 @@ const postSignupSchemas = {
         minLength: 5
       },
       userName: { type: 'string' },
-      category: {
+      userType: {
         type: "string",
-        enum: ["individual", "corporate"]
+        enum: ["individual", "corporate", "doctor"]
       }
     },
-    required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'category']
+    required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'userType']
   },
   responseSchema: {
     default: {
@@ -71,9 +71,13 @@ const postLoginSchemas = {
       uuid: { type: 'string' },
       userNameOrPhone: { type: 'string' },
       password: { type: 'string' },
-      userToken: { type: 'number' }
+      userToken: { type: 'number' },
+      userType: {
+        type: "string",
+        enum: ["individual", "corporate", "doctor", "payment"]
+      }
     },
-    required: ['userNameOrPhone', 'password']
+    required: ['userNameOrPhone', 'password', 'userType']
   },
   responseSchema: {
     default: {

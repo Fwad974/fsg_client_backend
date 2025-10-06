@@ -26,12 +26,12 @@ const schema = {
       minLength: 5
     },
     userName: { type: 'string' },
-    category: {
+    userType: {
       type: "string",
-      enum: ["individual", "corporate"]
+      enum: ["individual", "corporate", "doctor"]
     }
   },
-  required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'category']
+  required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'userType']
 }
 
 const constraints = ajv.compile(schema)
@@ -60,7 +60,7 @@ export default class SignupService extends ServiceBase {
       lastName: this.args.lastName?.trim(),
       email: this.args?.email?.toLowerCase?.().trim(),
       userName: this.args?.userName?.toLowerCase?.().trim(),
-      userType: this.args.category.trim(),
+      userType: this.args.type.trim(),
       phone: this.args?.phone,
     }
     let newUser

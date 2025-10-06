@@ -13,6 +13,34 @@ export default class UserRepository extends IUserRepository {
     return await UserModel.findByPk(id, { attributes, raw: true })
   }
 
+  static async findByUserNameOrPhoneAndType (userNameOrPhone, userType, options = {}) {
+    const { User: UserModel } = models
+
+    const {
+      attributes = ['id', 'uuid', 'phone']
+    } = options
+
+    const whereCondition = {
+      userType,
+      [Op.or]: [
+        {
+          userName: userNameOrPhone
+        },
+        {
+          phone: userNameOrPhone
+        }
+      ]
+    }
+
+    const user = await UserModel.findOne({
+      where: whereCondition,
+      attributes,
+      raw: true
+    })
+
+    return user
+  }
+
   static async findByUserNameOrPhone (userNameOrPhone, options = {}) {
     const { User: UserModel } = models
 
