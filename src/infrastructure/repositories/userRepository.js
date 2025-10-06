@@ -13,6 +13,22 @@ export default class UserRepository extends IUserRepository {
     return await UserModel.findByPk(id, { attributes, raw: true })
   }
 
+  static async findByIdWithRoles (id, options = {}) {
+    const { User: UserModel, UserRole: UserRoleModel } = models
+
+    const {
+      attributes = ['id', 'uuid'],
+      roleAttributes = ['permission', 'roleType']
+    } = options
+
+    return await UserModel.findByPk(id, {
+      attributes,
+      include: { model: UserRoleModel, as: 'role', attributes: roleAttributes },
+      raw: true,
+      nest: true
+    })
+  }
+
   static async findByUserNameOrPhoneAndType (userNameOrPhone, userType, options = {}) {
     const { User: UserModel } = models
 
