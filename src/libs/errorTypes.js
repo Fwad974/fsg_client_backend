@@ -1020,6 +1020,46 @@ export const SoftswissSignatureIsMissingErrorType = {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const SomethingWentWrongErrorType = {
   name: 'SomethingWentWrong',
   statusCode: StatusCodes.FORBIDDEN,
@@ -1074,4 +1114,12 @@ export const UserWithPhoneNumberErrorType = {
   isOperational: true,
   description: 'User by this phone number dose not exists.',
   errorCode: 6
+}
+
+export const PermissionDeniedErrorType = {
+  name: 'PermissionDenied',
+  statusCode: StatusCodes.NOT_ACCEPTABLE,
+  isOperational: true,
+  description: 'Permission Denied',
+  errorCode: 'PERMISSION_DENIED'
 }
