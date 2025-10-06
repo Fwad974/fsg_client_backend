@@ -11,6 +11,10 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true
     },
+    userRoleId: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: true
@@ -154,7 +158,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       field: 'uuid'
-    },
+    }
   }, {
     sequelize,
     underscored: true,
@@ -165,9 +169,14 @@ export default (sequelize, DataTypes) => {
   })
 
   User.associate = models => {
-        User.hasMany(models.PaymentTransaction, {
+    User.hasMany(models.PaymentTransaction, {
       foreignKey: 'actioneeId',
       as: 'paymentTransactions'
+    }),
+
+    User.belongsTo(models.UserRole, {
+      foreignKey: 'userRoleId',
+      as: 'role'
     })
   }
 
