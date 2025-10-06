@@ -67,5 +67,8 @@
   //   "borderRadius": "5px",
   //   "isWholeLine": true
   // },
-  "cSpell.ignoreWords": ["middlewares"]
+  "cSpell.ignoreWords": [
+    "middlewares"
+  ],
+  "makefile.configureOnOpen": false
 }
