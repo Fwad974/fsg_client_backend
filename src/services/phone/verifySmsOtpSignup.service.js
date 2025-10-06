@@ -28,7 +28,7 @@ export default class VerifySmsOtpSignupCodeService extends ServiceBase {
       return this.addError('UserWithPhoneNumberErrorType')
     }
 
-    const verifyOtpToken = await UserTokenRepository.findByTokenAndType(otp, TOKEN_TYPE.phone)
+    const verifyOtpToken = await UserTokenRepository.findByTokenAndType(otp, TOKEN_TYPE.phone) // TODO add timig 2 min
     logger.info('VerifySmsOtpCodeService: ', { message: 'this is the verifyOtpToken: ', context: { verifyOtpToken } })
 
     const userUpdateObject = {

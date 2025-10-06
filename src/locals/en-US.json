@@ -171,5 +171,9 @@
 	"UserNameAlreadyTakenErrorType": "UserNameAlreadyTakenErrorType",
 	"The username is already taken.": "The username is already taken.",
 	"UserNameOrPhoneAlreadyTaken": "UserNameOrPhoneAlreadyTaken",
-	"Account already exists with this username or phone number.": "Account already exists with this username or phone number."
+	"Account already exists with this username or phone number.": "Account already exists with this username or phone number.",
+	"UserWithPhoneNumber": "UserWithPhoneNumber",
+	"User by this phone number dose not exists.": "User by this phone number dose not exists.",
+	"OtpCodeInvalid": "OtpCodeInvalid",
+	"The otp code is invalid.": "The otp code is invalid."
 }

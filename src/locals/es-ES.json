@@ -19,5 +19,9 @@
 	"InvalidToken": "InvalidToken",
 	"The access token is missing or has expired.": "The access token is missing or has expired.",
 	"SequelizeDatabaseError": "SequelizeDatabaseError",
-	"Error": "Error"
+	"Error": "Error",
+	"UserWithPhoneNumber": "UserWithPhoneNumber",
+	"User by this phone number dose not exists.": "User by this phone number dose not exists.",
+	"OtpCodeInvalid": "OtpCodeInvalid",
+	"The otp code is invalid.": "The otp code is invalid."
 }
