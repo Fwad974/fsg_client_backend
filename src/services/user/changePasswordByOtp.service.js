@@ -65,7 +65,7 @@ export default class ChangePasswordByOtpService extends ServiceBase {
     }
 
     const newEncryptedPassword = await bcrypt.hash(
-      this.args.newPassword,
+      newPassword,
       SALT_ROUNDS
     )
 
@@ -75,7 +75,7 @@ export default class ChangePasswordByOtpService extends ServiceBase {
 
     await UserRepository.update(user.id, userUpdateObject, sequelizeTransaction)
 
-    await UserTokenRepository.destroy(verifyOtpToken.id, sequelizeTransaction)
+    await UserTokenRepository.destroy(userHasToken.id, sequelizeTransaction)
 
     return { message: 'Password Changed successfully' }
   }
