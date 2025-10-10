@@ -156,3 +156,10 @@ export const CONTACT_REQUEST_STATUS = {
   RESOLVED: 'resolved',
   CLOSED: 'closed'
 }
+
+export const USER_ROLE_TYPE = {
+  INDIVIDUAL: 'individual',
+  CORPORATE: 'corporate',
+  PAYMENT: 'payment',
+  DOCTOR: 'doctor'
+}

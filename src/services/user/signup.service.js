@@ -1,10 +1,11 @@
 import UserRepository from '../../infrastructure/repositories/userRepository'
+import UserRoleRepository from '../../infrastructure/repositories/userRoleRepository'
 import bcrypt from 'bcrypt'
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
 import { SALT_ROUNDS } from '../../libs/constants'
 import GenerateVerificationCodeService from '../generateCode/generateVerificationCode.service'
-import { TOKEN_TYPE } from '../../libs/constants'
+import { TOKEN_TYPE, USER_TYPES, USER_ROLE_TYPE } from '../../libs/constants'
 import _ from 'lodash'
 
 const schema = {
@@ -26,12 +27,12 @@ const schema = {
       minLength: 5
     },
     userName: { type: 'string' },
-    userType: {
-      type: "string",
-      enum: ["individual", "corporate", "doctor"]
-    }
+    // userType: {
+    //   type: "string",
+    //   enum: ["individual", "corporate", "doctor"]
+    // }
   },
-  required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'userType']
+  required: ['phone', 'password', 'userName', 'firstName', 'lastName']
 }
 
 const constraints = ajv.compile(schema)
@@ -60,8 +61,8 @@ export default class SignupService extends ServiceBase {
       lastName: this.args.lastName?.trim(),
       email: this.args?.email?.toLowerCase?.().trim(),
       userName: this.args?.userName?.toLowerCase?.().trim(),
-      userType: this.args.type.trim(),
-      phone: this.args?.phone,
+      userType: USER_TYPES.INDIVIDUAL,
+      phone: this.args?.phone
     }
     let newUser
 
@@ -75,6 +76,11 @@ export default class SignupService extends ServiceBase {
         this.args.password,
         SALT_ROUNDS
       )
+
+      const userRole = await UserRoleRepository.findByRoleType(USER_ROLE_TYPE.INDIVIDUAL, { attributes: ['id', 'roleType'] })
+      logger.info('SignupService: ', { message: 'this is the userRole', context: { userRole: JSON.stringify(userRole) } })
+
+      userObj.userRoleId = userRole.id
 
       const filteredUserObject = _.omitBy(userObj, _.isNil)
       logger.info('SignupService: ', { message: 'this is the filteredUserObject', context: { filteredUserObject: JSON.stringify(filteredUserObject) } })

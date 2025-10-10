@@ -51,7 +51,10 @@ export default class LoginService extends ServiceBase {
       userType: this.args.userType
     }
 
-    const user = await UserRepository.findByUserNameOrPhoneAndType(userObj.userNameOrPhone, userObj.userType, { attributes: ['id', 'encryptedPassword', 'phone', 'userName', 'signInCount', 'phoneVerified', 'uuid', 'firstName', 'lastName', 'email'] })
+    const user = await UserRepository.findByUserNameOrPhoneAndTypeWithUserRole(userObj.userNameOrPhone, userObj.userType, {
+      attributes: ['id', 'encryptedPassword', 'phone', 'userName', 'signInCount', 'phoneVerified', 'uuid', 'firstName', 'lastName', 'email'],
+      roleAttributes: ['name']
+    })
     Logger.info('LoginService: ', { message: 'this is the user', context: { user: JSON.stringify(user) } })
 
     if (!user) return this.addError('UserNotExistsErrorType')
@@ -87,7 +90,6 @@ export default class LoginService extends ServiceBase {
     // set token in redis
     const cacheTokenKey = getUserTokenCacheKey(user.id)
     setData(cacheTokenKey, accessToken, config.get('jwt.loginTokenExpiry'))
-
 
     return { message: 'Authentication successful', accessToken, user }
   }

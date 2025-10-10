@@ -92,11 +92,6 @@ module.exports = {
         allowNull: true,
         field: 'country_code'
       },
-      deletedAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        field: 'deleted_at'
-      },
       lastLogin: {
         type: Sequelize.DATE,
         allowNull: true,
@@ -149,7 +144,7 @@ module.exports = {
         field: 'medical_conditions'
       },
       emergency_contact_name: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.STRING,
         allowNull: true
       },
       emergencyContactPhone: {

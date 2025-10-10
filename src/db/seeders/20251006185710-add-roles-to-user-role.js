@@ -4,8 +4,8 @@ module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('user_roles', [
       {
-        name: 'individual',
-        role_type: 'user',
+        name: 'FSG:INDIVIDUAL',
+        role_type: 'individual',
         permission: JSON.stringify({
           USER: ['R']
         }),
@@ -13,7 +13,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'corporate',
+        name: 'FSG:CORPORATE',
         role_type: 'corporate',
         permission: JSON.stringify({
           REPORTS: ['R'],
@@ -23,7 +23,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'doctor',
+        name: 'FSG:DOCTOR',
         role_type: 'doctor',
         permission: JSON.stringify({
           REPORTS: ['R'],
@@ -33,7 +33,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'payment',
+        name: 'FSG:PAYMENT',
         role_type: 'payment',
         permission: JSON.stringify({
           TRANSACTION: ['R']

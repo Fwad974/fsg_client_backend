@@ -50,7 +50,7 @@ const postSignupSchemas = {
         enum: ["individual", "corporate", "doctor"]
       }
     },
-    required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'userType']
+    required: ['phone', 'password', 'userName', 'firstName', 'lastName']
   },
   responseSchema: {
     default: {
@@ -91,7 +91,10 @@ const postLoginSchemas = {
             uuid: { $ref: '/user.json#/properties/uuid' },
             firstName: { $ref: '/user.json#/properties/firstName' },
             lastName: { $ref: '/user.json#/properties/lastName' },
-            userName: { $ref: '/user.json#/properties/userName' }
+            userName: { $ref: '/user.json#/properties/userName' },
+            email: { $ref: '/user.json#/properties/email' },
+            phone: { $ref: '/user.json#/properties/phone' },
+            role: { $ref: '/user.json#/properties/role' }
           }
         }
       },
@@ -189,12 +192,6 @@ const putUpdateProfileSchemas = {
         type: 'string',
         enum: ['male', 'female', 'other']
       },
-      locale: {
-        type: 'string',
-        pattern: '^[a-zA-Z]*$',
-        minLength: 2,
-        maxLength: 30
-      },
       phone: { type: 'string' },
       phoneCode: { type: 'string' }
     }
@@ -207,10 +204,6 @@ const putUpdateProfileSchemas = {
         firstName: { $ref: '/user.json#/properties/firstName' },
         lastName: { $ref: '/user.json#/properties/lastName' },
         dateOfBirth: { $ref: '/user.json#/properties/dateOfBirth' },
-        signInIp: { $ref: '/user.json#/properties/signInIp' },
-        gender: { $ref: '/user.json#/properties/gender' },
-        locale: { $ref: '/user.json#/properties/locale' },
-        message: { type: 'string' },
         phone: { $ref: '/user.json#/properties/phone' },
         phoneCode: { $ref: '/user.json#/properties/phoneCode' }
       },

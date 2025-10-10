@@ -29,11 +29,12 @@ export default class UserRepository extends IUserRepository {
     })
   }
 
-  static async findByUserNameOrPhoneAndType (userNameOrPhone, userType, options = {}) {
-    const { User: UserModel } = models
+  static async findByUserNameOrPhoneAndTypeWithUserRole (userNameOrPhone, userType, options = {}) {
+    const { User: UserModel, UserRole: UserRoleModel } = models
 
     const {
-      attributes = ['id', 'uuid', 'phone']
+      attributes = ['id', 'uuid', 'phone'],
+      roleAttributes = ['id', 'name']
     } = options
 
     const whereCondition = {
@@ -51,7 +52,14 @@ export default class UserRepository extends IUserRepository {
     const user = await UserModel.findOne({
       where: whereCondition,
       attributes,
-      raw: true
+      include:[{
+        model: UserRoleModel,
+        attributes: roleAttributes,
+        as: 'role',
+        require: true
+      }],
+      raw: true,
+      nest: true
     })
 
     return user

@@ -130,8 +130,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    emergency_contact_name: {
-      type: DataTypes.BIGINT,
+    emergencyContactName: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     emergencyContactPhone: {
