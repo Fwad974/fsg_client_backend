@@ -53,14 +53,6 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: false
     },
-    dateOfBirth: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    gender: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     profileImageUrl: {
       type: DataTypes.STRING,
       allowNull: true
@@ -94,66 +86,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    address1: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    address2: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    city: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    postalCode: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    country: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    bloodType: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    allergies: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    medicalConditions: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    emergencyContactName: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    emergencyContactPhone: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    emergencyContactRelationship: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    insuranceProvider: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    insurancePolicyNumber: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    insuranceGroupNumber: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     uuid: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -172,11 +104,39 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.PaymentTransaction, {
       foreignKey: 'actioneeId',
       as: 'paymentTransactions'
-    }),
+    })
+
+    User.hasMany(models.UserToken, {
+      foreignKey: 'userId'
+    })
+
+    User.hasMany(models.ContactRequest, {
+      foreignKey: 'userId'
+    })
 
     User.belongsTo(models.UserRole, {
       foreignKey: 'userRoleId',
       as: 'role'
+    })
+
+    User.hasOne(models.Individual, {
+      foreignKey: 'userId',
+      as: 'individualProfile'
+    })
+
+    User.hasOne(models.Corporate, {
+      foreignKey: 'userId',
+      as: 'corporateProfile'
+    })
+
+    User.hasOne(models.Doctor, {
+      foreignKey: 'userId',
+      as: 'doctorProfile'
+    })
+
+    User.hasOne(models.Payment, {
+      foreignKey: 'userId',
+      as: 'paymentProfile'
     })
   }
 

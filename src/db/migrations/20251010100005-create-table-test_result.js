@@ -10,10 +10,23 @@ module.exports = {
         autoIncrement: true,
         field: 'id'
       },
-      userId: {
+      individualId: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        field: 'user_id'
+        field: 'individual_id',
+        comment: 'References individuals.id - Test always belongs to an individual'
+      },
+      corporateId: {
+        type: Sequelize.BIGINT,
+        allowNull: true,
+        field: 'corporate_id',
+        comment: 'Optional - Corporate associated with this test'
+      },
+      doctorId: {
+        type: Sequelize.BIGINT,
+        allowNull: true,
+        field: 'doctor_id',
+        comment: 'Optional - Doctor associated with this test'
       },
       name: {
         type: Sequelize.STRING,
@@ -23,8 +36,12 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'pending',
         field: 'status'
+      },
+      sample: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'sample'
       },
       duration: {
         type: Sequelize.INTEGER,
@@ -35,11 +52,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
         field: 'error_message'
-      },
-      errorStack: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'error_stack'
       },
       errorType: {
         type: Sequelize.STRING,
@@ -55,57 +67,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
         field: 'end_time'
-      },
-      suiteName: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        field: 'suite_name'
-      },
-      filePath: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        field: 'file_path'
-      },
-      fullName: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        field: 'full_name'
-      },
-      tags: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: true,
-        field: 'tags'
-      },
-      assertionResult: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'assertion_result'
-      },
-      stdout: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'stdout'
-      },
-      stderr: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'stderr'
-      },
-      retryAttempts: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        defaultValue: 0,
-        field: 'retry_attempts'
-      },
-      expectedValue: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'expected_value'
-      },
-      actualValue: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        field: 'actual_value'
       },
       createdAt: {
         allowNull: false,

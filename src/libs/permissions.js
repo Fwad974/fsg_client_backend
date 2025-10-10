@@ -25,13 +25,25 @@ export const PERMISSION_TYPE = {
 
     // transaction
     'transaction/user-transactions': 'USER',
-    'transaction/coprate-transactions': 'TRANSACTION'
+    'transaction/coprate-transactions': 'TRANSACTION',
+
+    // doctor
+    'doctor/get-patients': 'DOCTOR',
+    'doctor/get-patients-test-results': 'DOCTOR',
+
+    // corporate
+    'corporate/get-patients': 'COPORATE',
+    'corporate/get-doctors': 'COPORATE',
+    'corporate/get-patients-test-results': 'COPORATE',
+
   }
 }
 
 // Permission Object
 export const PERMISSIONS = {
   Dashboard: ['R'],
-  USER: ['R'],
-  TRANSACTION: ['R']
+  TRANSACTION: ['R'],
+  REPORTS: ['R'],
+  DOCTOR: ['R'],
+  COPORATE: ['R']
 }

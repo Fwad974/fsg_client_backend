@@ -1,5 +1,6 @@
 import UserRepository from '../../infrastructure/repositories/userRepository'
 import UserRoleRepository from '../../infrastructure/repositories/userRoleRepository'
+import IndividualRepository from '../../infrastructure/repositories/individualRepository'
 import bcrypt from 'bcrypt'
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
@@ -86,6 +87,12 @@ export default class SignupService extends ServiceBase {
       logger.info('SignupService: ', { message: 'this is the filteredUserObject', context: { filteredUserObject: JSON.stringify(filteredUserObject) } })
 
       newUser = await UserRepository.create(filteredUserObject, sequelizeTransaction)
+
+      const individualObj = {
+        userId: newUser.id
+      }
+
+      await IndividualRepository.create(individualObj, sequelizeTransaction)
     } catch (error) {
       logger.error('SignupService: ', { message: `catch error message ${error.message}`, exception: error })
 
