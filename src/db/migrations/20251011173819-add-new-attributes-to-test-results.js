@@ -18,7 +18,7 @@ module.exports = {
     });
 
     await queryInterface.addColumn('test_results', 'file_uuid', {
-      type: Sequelize.UUID,
+      type: Sequelize.STRING,
       defaultValue: Sequelize.UUIDV4,
       allowNull: true,
       unique: true

@@ -80,7 +80,7 @@ export default (sequelize, DataTypes) => {
       field: 'turn_around_time'
     },
     fileUuid: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       defaultValue: DataTypes.UUIDV4,
       allowNull: true,
       unique: true,
