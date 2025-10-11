@@ -11,7 +11,7 @@ export const checkPermission = async (req, res, next) => {
     let hasPermission = false
 
     const {
-      auth: { userId }
+      auth: { id: userId }
     } = req.context
 
     const userDetails = await UserRepository.findByIdWithRoles(userId, {

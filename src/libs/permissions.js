@@ -16,15 +16,16 @@ export const PERMISSION_TYPE = {
   DOCTOR: 'DOCTOR',
   TRANSACTION: 'TRANSACTION',
   REPORTS: 'REPORTS',
+  INDIVIDUAL: 'individual',
 
   aliases: {
     // Dashboard
-    'dashboard/get-all-test-results': 'USER',
+    'dashboard/get-all-test-results': 'INDIVIDUAL',
     'dashboard/get-patient-test-results': 'REPORTS',
     'dashboard/get-patient-reports': 'REPORTS',
 
     // transaction
-    'transaction/user-transactions': 'USER',
+    'transaction/user-transactions': 'INDIVIDUAL',
     'transaction/coprate-transactions': 'TRANSACTION',
 
     // doctor
@@ -45,5 +46,6 @@ export const PERMISSIONS = {
   TRANSACTION: ['R'],
   REPORTS: ['R'],
   DOCTOR: ['R'],
-  COPORATE: ['R']
+  COPORATE: ['R'],
+  INDIVIDUAL: ['R']
 }
