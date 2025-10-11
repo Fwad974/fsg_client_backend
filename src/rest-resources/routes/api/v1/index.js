@@ -5,6 +5,7 @@ import transactionRoutes from './transactions.routes'
 import DashboardRoutes from './dashboard.routes'
 import doctorRoutes from './doctor.routes'
 import corporateRoutes from './corporate.routes'
+import fileRoutes from './file.routes'
 
 const v1Router = express.Router()
 
@@ -13,5 +14,6 @@ v1Router.use('/transaction', transactionRoutes)
 v1Router.use('/dashboard', DashboardRoutes)
 v1Router.use('/doctor', doctorRoutes)
 v1Router.use('/corporate', corporateRoutes)
+v1Router.use('/file', fileRoutes)
 
 export default v1Router

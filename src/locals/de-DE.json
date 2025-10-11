@@ -23,5 +23,8 @@
 	"UserWithPhoneNumber": "UserWithPhoneNumber",
 	"User by this phone number dose not exists.": "User by this phone number dose not exists.",
 	"OtpCodeInvalid": "OtpCodeInvalid",
-	"The otp code is invalid.": "The otp code is invalid."
+	"The otp code is invalid.": "The otp code is invalid.",
+	"TypeError": "TypeError",
+	"RecordNotFound": "RecordNotFound",
+	"The specified record was not found.": "The specified record was not found."
 }

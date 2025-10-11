@@ -289,13 +289,7 @@ export const InvalidAffiliateCodeErrorType = {
   errorCode: 3039
 }
 
-export const RecordNotFoundErrorType = {
-  name: 'RecordNotFound',
-  statusCode: StatusCodes.NOT_FOUND,
-  isOperational: true,
-  description: 'The specified record was not found.',
-  errorCode: 3040
-}
+
 
 export const WithdrawalRequestAlreadyPendingErrorType = {
   name: 'WithdrawalRequestAlreadyPending',
@@ -1122,4 +1116,12 @@ export const PermissionDeniedErrorType = {
   isOperational: true,
   description: 'Permission Denied',
   errorCode: 'PERMISSION_DENIED'
+}
+
+export const RecordNotFoundErrorType = {
+  name: 'RecordNotFound',
+  statusCode: StatusCodes.NOT_FOUND,
+  isOperational: true,
+  description: 'The specified record was not found.',
+  errorCode: 'RECORD_NOT_FOUND'
 }
