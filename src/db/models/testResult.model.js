@@ -64,6 +64,26 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       field: 'end_time'
     },
+    fileUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'file_url'
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'description'
+    },
+    code: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'code'
+    },
+    turnAroundTime: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'turn_around_time'
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
