@@ -26,5 +26,7 @@
 	"The otp code is invalid.": "The otp code is invalid.",
 	"TypeError": "TypeError",
 	"RecordNotFound": "RecordNotFound",
-	"The specified record was not found.": "The specified record was not found."
+	"The specified record was not found.": "The specified record was not found.",
+	"PermissionDenied": "PermissionDenied",
+	"Permission Denied": "Permission Denied"
 }

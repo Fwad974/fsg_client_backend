@@ -175,5 +175,7 @@
 	"UserWithPhoneNumber": "UserWithPhoneNumber",
 	"User by this phone number dose not exists.": "User by this phone number dose not exists.",
 	"OtpCodeInvalid": "OtpCodeInvalid",
-	"The otp code is invalid.": "The otp code is invalid."
+	"The otp code is invalid.": "The otp code is invalid.",
+	"PermissionDenied": "PermissionDenied",
+	"Permission Denied": "Permission Denied"
 }
