@@ -16,3 +16,6 @@ package-lock.json
 
 *.rdb
 dist
+
+# download path files
+downloads
