@@ -64,11 +64,6 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       field: 'end_time'
     },
-    fileUrl: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: 'file_url'
-    },
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -83,6 +78,18 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'turn_around_time'
+    },
+    fileUuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: true,
+      unique: true,
+      field: 'file_uuid'
+    },
+    fileName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'file_name'
     },
     createdAt: {
       allowNull: false,
