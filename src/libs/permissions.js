@@ -21,12 +21,12 @@ export const PERMISSION_TYPE = {
   aliases: {
     // Dashboard
     'dashboard/get-all-test-results': 'INDIVIDUAL',
-    'dashboard/get-patient-test-results': 'REPORTS',
-    'dashboard/get-patient-reports': 'REPORTS',
+    'dashboard/get-patient-test-results': 'INDIVIDUAL',
+    'dashboard/get-patient-reports': 'INDIVIDUAL',
 
     // transaction
     'transaction/user-transactions': 'INDIVIDUAL',
-    'transaction/coprate-transactions': 'TRANSACTION',
+    'transaction/coprate-transactions': 'COPORATE',
 
     // doctor
     'doctor/get-patients': 'DOCTOR',
@@ -36,6 +36,8 @@ export const PERMISSION_TYPE = {
     'corporate/get-patients': 'COPORATE',
     'corporate/get-doctors': 'COPORATE',
     'corporate/get-patients-test-results': 'COPORATE',
+
+    // payment
 
   }
 }

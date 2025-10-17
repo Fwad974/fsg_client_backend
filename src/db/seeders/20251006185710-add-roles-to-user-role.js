@@ -8,7 +8,7 @@ module.exports = {
         name: 'FSG:INDIVIDUAL',
         role_type: 'individual',
         permission: JSON.stringify({
-          USER: ['R']
+          INDIVIDUAL: ['R']
         }),
         created_at: new Date(),
         updated_at: new Date()
@@ -18,7 +18,8 @@ module.exports = {
         name: 'FSG:CORPORATE',
         role_type: 'corporate',
         permission: JSON.stringify({
-          REPORTS: ['R']
+          REPORTS: ['R'],
+          COPORATE: ['R']
         }),
         created_at: new Date(),
         updated_at: new Date()
@@ -28,7 +29,8 @@ module.exports = {
         name: 'FSG:DOCTOR',
         role_type: 'doctor',
         permission: JSON.stringify({
-          REPORTS: ['R']
+          REPORTS: ['R'],
+          DOCTOR: ['R']
         }),
         created_at: new Date(),
         updated_at: new Date()
@@ -39,7 +41,8 @@ module.exports = {
         role_type: 'payment',
         permission: JSON.stringify({
           TRANSACTION: ['R'],
-          REPORTS: ['R']
+          REPORTS: ['R'],
+          PAYMENT: ['R']
         }),
         created_at: new Date(),
         updated_at: new Date()
