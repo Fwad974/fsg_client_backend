@@ -13,10 +13,10 @@ export default class TestResultRepository extends ITestResultRepository {
     return await TestResultModel.findByPk(id, { attributes, raw: true })
   }
 
-  static async findAllByUserIdWithSearch (userId, options = {}) {
+  static async findAllByIndividualIdWithSearch (individualId, options = {}) {
     const { TestResult: TestResultModel } = models
 
-    const whereClause = { userId }
+    const whereClause = { individualId }
 
     const {
       attributes = ['id'],
