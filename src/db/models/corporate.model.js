@@ -72,6 +72,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'corporateId',
       as: 'testResults'
     })
+
+    Corporate.hasMany(models.PaymentTransaction, {
+      foreignKey: 'corporateId',
+      as: 'paymentTransactions'
+    })
   }
 
   return Corporate

@@ -18,6 +18,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: true
     },
+    corporateId: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      field: 'corporate_id'
+    },
     amount: {
       type: DataTypes.DOUBLE,
       allowNull: true,
@@ -61,12 +66,14 @@ export default (sequelize, DataTypes) => {
   })
 
   PaymentTransaction.associate = models => {
-    PaymentTransaction.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user',
-      scope: {
-        userType: USER_TYPES.USER
-      }
+    PaymentTransaction.belongsTo(models.Individual, {
+      foreignKey: 'IndividualId',
+      as: 'individual',
+    })
+
+    PaymentTransaction.belongsTo(models.Corporate, {
+      foreignKey: 'corporateId',
+      as: 'corporate'
     })
   }
 

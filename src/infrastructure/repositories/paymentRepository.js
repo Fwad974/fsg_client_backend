@@ -1,5 +1,6 @@
 import models from '../../db/models'
 import IPaymentRepository from '../../domain/repositories/IPaymentRepository'
+import { Op } from 'sequelize'
 
 export default class PaymentRepository extends IPaymentRepository {
   static async findById (id, options = {}) {
@@ -10,13 +11,22 @@ export default class PaymentRepository extends IPaymentRepository {
   }
 
   static async findByUserId (userId, options = {}) {
-    const { Payment: PaymentModel } = models
+    const { Payment: PaymentModel, Corporate: CorporateModel, User: UserModel } = models
     const { transaction } = options
 
     return await PaymentModel.findOne({
       where: { userId },
       transaction,
-      raw: true
+      include: [
+        {
+          model: CorporateModel,
+          as: 'corporate'
+        },
+        {
+          model: UserModel,
+          as: 'user'
+        }
+      ]
     })
   }
 
@@ -34,4 +44,5 @@ export default class PaymentRepository extends IPaymentRepository {
       transaction
     })
   }
+
 }
