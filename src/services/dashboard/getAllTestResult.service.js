@@ -23,14 +23,13 @@ export default class GetAllTestResultService extends ServiceBase {
       searchTerm = null
     } = this.args
 
-    const { count, rows } = await TestResultRepository.findAllByUserIdWithSearch(userId,
+    const { count, rows } = await TestResultRepository.findAllByIndividualIdWithSearch(userId,
     {
       limit,
       offset,
       searchTerm,
-      attributes: ['id', 'userId', 'name', 'status', 'duration', 'errorMessage', 'errorStack', 'errorType',  'startTime',
-        'endTime', 'suiteName', 'filePath',  'fullName', 'tags', 'assertionResult', 'stdout', 'stderr', 'retryAttempts',
-        'expectedValue', 'actualValue'
+      attributes: ['id', 'individualId', 'corporateId', 'doctorId', 'name', 'status', 'sample', 'duration', 'errorMessage', 'errorType', 'startTime',
+        'endTime', 'description', 'code', 'turnAroundTime', 'fileUuid', 'fileName'
       ]
     })
 
