@@ -28,6 +28,26 @@ module.exports = {
         allowNull: true,
         field: 'gender'
       },
+      emiratesId: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        field: 'emirates_id'
+      },
+      nationality: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        field: 'nationality'
+      },
+      diagnosis: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        field: 'diagnosis'
+      },
+      address: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+        field: 'address'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

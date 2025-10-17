@@ -70,10 +70,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    countryCode: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     deletedAt: {
       type: DataTypes.DATE,
       allowNull: true

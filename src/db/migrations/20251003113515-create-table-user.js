@@ -83,11 +83,6 @@ module.exports = {
         unique: true,
         field: 'user_name'
       },
-      countryCode: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        field: 'country_code'
-      },
       lastLogin: {
         type: Sequelize.DATE,
         allowNull: true,

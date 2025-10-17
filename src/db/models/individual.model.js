@@ -13,27 +13,38 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: false,
       unique: true,
-      field: 'user_id'
     },
     dateOfBirth: {
       type: DataTypes.DATE,
       allowNull: true,
-      field: 'date_of_birth'
     },
     gender: {
       type: DataTypes.STRING,
       allowNull: true,
-      field: 'gender'
+    },
+    emiratesId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    nationality: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    diagnosis: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      field: 'updated_at'
     }
   }, {
     sequelize,
