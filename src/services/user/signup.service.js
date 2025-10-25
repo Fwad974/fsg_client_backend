@@ -69,7 +69,7 @@ export default class SignupService extends ServiceBase {
     }
     let newUser
 
-    const userExistsWirthEmiratesid = IndividualRepository.findByEmiratesId(userObj.emiratesId)
+    const userExistsWirthEmiratesid = await IndividualRepository.findByEmiratesId(userObj.emiratesId)
     logger.info('SignupService: ', { message: 'this is the userExistsWirthEmiratesid', context: { userExistsWirthEmiratesid: JSON.stringify(userExistsWirthEmiratesid) } })
 
     if (userExistsWirthEmiratesid) return this.addError('UserExistsWithEmiratesIdErrorType')
