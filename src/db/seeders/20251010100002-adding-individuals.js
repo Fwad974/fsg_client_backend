@@ -14,6 +14,7 @@ module.exports = {
           user_id: 1,
           date_of_birth: new Date('1990-05-15'),
           gender: 'male',
+          emirates_id: '784-1990-1234567-1',
           created_at: now,
           updated_at: now
         },
@@ -21,6 +22,7 @@ module.exports = {
           user_id: 2,
           date_of_birth: new Date('1985-08-22'),
           gender: 'female',
+          emirates_id: '784-1985-7654321-9',
           created_at: now,
           updated_at: now
         }
