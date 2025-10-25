@@ -48,9 +48,10 @@ const postSignupSchemas = {
       userType: {
         type: "string",
         enum: ["individual", "corporate", "doctor"]
-      }
+      },
+      emiratesId: { type: 'string' }
     },
-    required: ['phone', 'password', 'userName', 'firstName', 'lastName']
+    required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'emiratesId']
   },
   responseSchema: {
     default: {

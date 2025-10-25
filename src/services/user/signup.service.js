@@ -28,12 +28,13 @@ const schema = {
       minLength: 5
     },
     userName: { type: 'string' },
+    emiratesId: { type: 'string' }
     // userType: {
     //   type: "string",
     //   enum: ["individual", "corporate", "doctor"]
     // }
   },
-  required: ['phone', 'password', 'userName', 'firstName', 'lastName']
+  required: ['phone', 'password', 'userName', 'firstName', 'lastName', 'emiratesId']
 }
 
 const constraints = ajv.compile(schema)
@@ -63,9 +64,15 @@ export default class SignupService extends ServiceBase {
       email: this.args?.email?.toLowerCase?.().trim(),
       userName: this.args?.userName?.toLowerCase?.().trim(),
       userType: USER_TYPES.INDIVIDUAL,
-      phone: this.args?.phone
+      phone: this.args?.phone,
+      emiratesId: this.args.emiratesId
     }
     let newUser
+
+    const userExistsWirthEmiratesid = IndividualRepository.findByEmiratesId(userObj.emiratesId)
+    logger.info('SignupService: ', { message: 'this is the userExistsWirthEmiratesid', context: { userExistsWirthEmiratesid: JSON.stringify(userExistsWirthEmiratesid) } })
+
+    if (userExistsWirthEmiratesid) return this.addError('UserExistsWithEmiratesIdErrorType')
 
     const userExists = await UserRepository.findByUserNameAndPhone(userObj.userName, userObj.phone, { attributes: ['id'] })
     logger.info('SignupService: ', { message: 'this is the userExists', context: { userExists: JSON.stringify(userExists) } })
