@@ -30,7 +30,8 @@ export default class IndividualRepository extends IIndividualRepository {
     return await IndividualModel.findOne({
       where: { emiratesId },
       transaction,
-      attributes
+      attributes,
+      raw: true
     })
   }
 

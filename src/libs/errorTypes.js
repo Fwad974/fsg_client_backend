@@ -1128,7 +1128,7 @@ export const RecordNotFoundErrorType = {
 
 export const UserExistsWithEmiratesIdErrorType = {
   name: 'UserExistsWithEmiratesId',
-  statusCode: StatusCodes.NOT_FOUND,
+  statusCode: StatusCodes.BAD_REQUEST,
   isOperational: true,
   description: 'the user with emiratesId already exists.',
   errorCode: 'EMIRATES_ID_EXISTS'
