@@ -28,5 +28,7 @@
 	"RecordNotFound": "RecordNotFound",
 	"The specified record was not found.": "The specified record was not found.",
 	"PermissionDenied": "PermissionDenied",
-	"Permission Denied": "Permission Denied"
+	"Permission Denied": "Permission Denied",
+	"UserExistsWithEmiratesId": "UserExistsWithEmiratesId",
+	"the user with emiratesId already exists.": "the user with emiratesId already exists."
 }
