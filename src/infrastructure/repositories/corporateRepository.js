@@ -106,7 +106,14 @@ export default class CorporateRepository extends ICorporateRepository {
 
   static async findPatientsTestResultsByCorporateId (corporateId, options = {}) {
     const { TestResult: TestResultModel, Individual: IndividualModel, User: UserModel } = models
-    const { transaction, limit = 10, offset = 0, searchTerm } = options
+    const {
+      transaction,
+      limit = 10,
+      offset = 0,
+      searchTerm,
+      attributes = ['id', 'userId', 'dateOfBirth', 'gender', 'nationality', 'diagnosis', 'address'],
+      userAttributes = ['id', 'firstName', 'lastName', 'email', 'phone']
+    } = options
 
     const whereClause = { corporateId }
 
@@ -121,10 +128,11 @@ export default class CorporateRepository extends ICorporateRepository {
       include: [{
         model: IndividualModel,
         as: 'individual',
+        attributes,
         include: [{
           model: UserModel,
           as: 'user',
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+          attributes: userAttributes
         }]
       }],
       limit,
