@@ -35,20 +35,22 @@ const getCorporatePatientsSchemas = {
           items: {
             type: 'object',
             properties: {
-              id: { type: 'number' },
-              userId: { type: 'number' },
-              dateOfBirth: { type: ['string', 'null'], format: 'date-time' },
-              gender: { type: ['string', 'null'] },
-              createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' },
-              user: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number' },
-                  firstName: { type: ['string', 'null'] },
-                  lastName: { type: ['string', 'null'] },
-                  email: { type: ['string', 'null'] },
-                  phone: { type: ['string', 'null'] }
+              individuals: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    user: {
+                      type: 'object',
+                      properties: {
+                        userName: { type: ['string', 'null'] },
+                        uuid: { type: 'string' },
+                        email: { type: ['string', 'null'] },
+                        phone: { type: ['string', 'null'] }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -215,6 +217,89 @@ corporateRoutes.route('/get-patients-test-results')
   checkPermission,
   CorporateController.getCorporatePatientsTestResults,
   responseValidationMiddleware(getCorporatePatientsTestResultsSchemas)
+)
+
+const getCorporateTestResultsSchemas = {
+  querySchema: {
+    type: 'object',
+    properties: {
+      limit: {
+        type: 'string',
+        pattern: '^[0-9]+$'
+      },
+      offset: {
+        type: 'string',
+        pattern: '^[0-9]+$'
+      },
+      searchTerm: {
+        type: 'string',
+        minLength: 1,
+        maxLength: 100
+      }
+    }
+  },
+  responseSchema: {
+    default: {
+      type: 'object',
+      properties: {
+        count: { type: 'number' },
+        rows: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              testResults: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    name: { type: 'string' },
+                    status: { type: 'string' },
+                    sample: { type: 'string' },
+                    duration: { type: ['number', 'null'] },
+                    errorMessage: { type: ['string', 'null'] },
+                    errorType: { type: ['string', 'null'] },
+                    startTime: { type: ['string', 'null'], format: 'date-time' },
+                    endTime: { type: ['string', 'null'], format: 'date-time' },
+                    fileUuid: { type: ['string', 'null'] },
+                    fileName: { type: ['string', 'null'] },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    individual: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'number' },
+                        user: {
+                          type: ['object', 'null'],
+                          properties: {
+                            userName: { type: ['string', 'null'] },
+                            uuid: { type: 'string' },
+                            email: { type: ['string', 'null'] },
+                            phone: { type: ['string', 'null'] }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      required: ['count', 'rows']
+    }
+  }
+}
+
+corporateRoutes.route('/get-test-results')
+.get(
+  contextMiddleware(),
+  requestValidationMiddleware(getCorporateTestResultsSchemas),
+  authenticationMiddleWare,
+  checkPermission,
+  CorporateController.getCorporateTestResults,
+  responseValidationMiddleware(getCorporateTestResultsSchemas)
 )
 
 export default corporateRoutes

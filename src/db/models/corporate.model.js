@@ -9,12 +9,6 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       field: 'id'
     },
-    userId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      unique: true,
-      field: 'user_id'
-    },
     companyName: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -24,6 +18,21 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'industry'
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'phone_number'
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'email'
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'address'
     },
     createdAt: {
       allowNull: false,
@@ -44,14 +53,9 @@ export default (sequelize, DataTypes) => {
   })
 
   Corporate.associate = models => {
-    Corporate.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user'
-    })
-
-    Corporate.hasOne(models.Payment, {
+    Corporate.hasMany(models.User, {
       foreignKey: 'corporateId',
-      as: 'payment'
+      as: 'users'
     })
 
     Corporate.belongsToMany(models.Individual, {

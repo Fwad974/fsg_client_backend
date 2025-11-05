@@ -18,7 +18,7 @@ export default class GetAllTestResultService extends ServiceBase {
     logger.info('GetAllTestResultService: ', { message: `this is the this.args line 39: ${JSON.stringify(this.args)}` })
 
     const {
-      limit = 10,
+      limit,
       offset = 1,
       searchTerm = null
     } = this.args

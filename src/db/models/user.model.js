@@ -15,6 +15,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: false
     },
+    doctorId: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    corporateId: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: true
@@ -120,24 +128,18 @@ export default (sequelize, DataTypes) => {
       as: 'individualProfile'
     })
 
-    User.hasOne(models.Corporate, {
-      foreignKey: 'userId',
-      as: 'corporateProfile'
+    User.belongsTo(models.Corporate, {
+      foreignKey: 'corporateId',
+      as: 'corporate'
     })
 
-    User.hasOne(models.Doctor, {
-      foreignKey: 'userId',
-      as: 'doctorProfile'
-    })
-
-    User.hasOne(models.Payment, {
-      foreignKey: 'userId',
-      as: 'paymentProfile'
+    User.belongsTo(models.Doctor, {
+      foreignKey: 'doctorId',
+      as: 'doctor'
     })
   }
 
   User.beforeValidate((user) => {
-
     if (!user.uuid) {
       user.uuid = customNanoid()
     }

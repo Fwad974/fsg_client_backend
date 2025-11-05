@@ -1,5 +1,4 @@
 import ServiceBase from '../../libs/serviceBase'
-import PaymentRepository from '../../infrastructure/repositories/paymentRepository'
 import PaymentTransactionRepository from '../../infrastructure/repositories/paymentTransactionRepository'
 import Logger from '../../libs/logger'
 
@@ -24,7 +23,7 @@ export default class GetAllCorporatePaymentsService extends ServiceBase {
     } = this.args
 
     // First, find the payment record for the authenticated user which includes corporate info
-    const payment = await PaymentRepository.findByUserId(userId)
+    // const payment = await PaymentRepository.findByUserId(userId)
 
     Logger.info('GetAllCorporatePaymentsService: ', { message: 'Payment found', context: { payment: JSON.stringify(payment) } })
 

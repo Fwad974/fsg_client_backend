@@ -31,11 +31,13 @@ export const PERMISSION_TYPE = {
     // doctor
     'doctor/get-patients': 'DOCTOR',
     'doctor/get-patients-test-results': 'DOCTOR',
+    'doctor/get-test-results': 'DOCTOR',
 
     // corporate
     'corporate/get-patients': 'COPORATE',
     'corporate/get-doctors': 'COPORATE',
     'corporate/get-patients-test-results': 'COPORATE',
+    'corporate/get-test-results': 'COPORATE'
 
     // payment
 

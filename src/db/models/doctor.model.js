@@ -1,5 +1,8 @@
 'use strict'
 
+import { customAlphabet } from 'nanoid'
+const customNanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_', 8)
+
 export default (sequelize, DataTypes) => {
   const Doctor = sequelize.define('Doctor', {
     id: {
@@ -9,21 +12,35 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       field: 'id'
     },
-    userId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      unique: true,
-      field: 'user_id'
-    },
     licenseNumber: {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'license_number'
     },
+    clinicianName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'clinician_name'
+    },
+    clinicianPhoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'clinician_phone_number'
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'email'
+    },
     specialty: {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'specialty'
+    },
+    uuid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'uuid'
     },
     createdAt: {
       allowNull: false,
@@ -44,9 +61,9 @@ export default (sequelize, DataTypes) => {
   })
 
   Doctor.associate = models => {
-    Doctor.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user'
+    Doctor.hasMany(models.User, {
+      foreignKey: 'doctorId',
+      as: 'users'
     })
 
     Doctor.belongsToMany(models.Individual, {
@@ -68,6 +85,12 @@ export default (sequelize, DataTypes) => {
       as: 'testResults'
     })
   }
+
+  Doctor.beforeValidate((doctor) => {
+    if (!doctor.uuid) {
+      doctor.uuid = customNanoid()
+    }
+  })
 
   return Doctor
 }

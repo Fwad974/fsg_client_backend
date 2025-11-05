@@ -14,14 +14,14 @@ export default class TestResultRepository extends ITestResultRepository {
   }
 
   static async findAllByIndividualIdWithSearch (individualId, options = {}) {
-    const { TestResult: TestResultModel } = models
+    const { TestResult: TestResultModel, Individual: IndividualModel, User: UserModel } = models
 
     const whereClause = { individualId }
 
     const {
       attributes = ['id'],
-      offset = 1,
-      limit = 10,
+      offset,
+      limit,
       orderBy = [['createdAt', 'ASC']],
       searchTerm = null
     } = options
@@ -39,7 +39,22 @@ export default class TestResultRepository extends ITestResultRepository {
       limit,
       offset,
       order: orderBy,
-      raw: true
+      include: [
+        {
+          model: IndividualModel,
+          as: 'individual',
+          attributes: ['id', 'userId'],
+          include: [
+            {
+              model: UserModel,
+              as: 'user',
+              attributes: ['userName']
+            }
+          ]
+        }
+      ],
+      raw: true,
+      nest: true
     })
 
     return { count, rows }

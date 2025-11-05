@@ -7,7 +7,7 @@ export default class UserRepository extends IUserRepository {
     const { User: UserModel } = models
 
     const {
-      attributes = ['id', 'uuid']
+      attributes = ['id', 'uuid', 'doctorId', 'corporateId']
     } = options
 
     return await UserModel.findByPk(id, { attributes, raw: true })
