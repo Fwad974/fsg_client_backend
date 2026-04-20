@@ -68,4 +68,8 @@ RUN mv ./.sequelizerc_prod ./.sequelizerc
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
+EXPOSE 8008
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=3 \
+  CMD wget --spider -q http://localhost:8008/health-check || exit 1
+
 CMD ["npm", "run", "start"]
