@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "babel src --out-dir dist",
-    "start": "NODE_ENV=production node start-prod.js",
+    "start": "NODE_ENV=production node ./dist/start-prod.js",
     "start:workers": "NODE_ENV=production node ./dist/startWorkers.js",
     "babel-node": "babel-node --inspect=0.0.0.0:9229",
     "lint": "NODE_ENV=production standard --fix",
