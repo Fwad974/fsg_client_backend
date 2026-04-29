@@ -30,5 +30,9 @@
 	"PermissionDenied": "PermissionDenied",
 	"Permission Denied": "Permission Denied",
 	"UserExistsWithEmiratesId": "UserExistsWithEmiratesId",
-	"the user with emiratesId already exists.": "the user with emiratesId already exists."
+	"the user with emiratesId already exists.": "the user with emiratesId already exists.",
+	"DocInstanceNotFound": "DocInstanceNotFound",
+	"The requested document is not available.": "The requested document is not available.",
+	"AccountNotLinked": "AccountNotLinked",
+	"Account is not linked to an entity for its account type.": "Account is not linked to an entity for its account type."
 }

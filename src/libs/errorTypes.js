@@ -1133,3 +1133,35 @@ export const UserExistsWithEmiratesIdErrorType = {
   description: 'the user with emiratesId already exists.',
   errorCode: 'EMIRATES_ID_EXISTS'
 }
+
+export const AccountNotLinkedErrorType = {
+  name: 'AccountNotLinked',
+  statusCode: StatusCodes.UNPROCESSABLE_ENTITY,
+  isOperational: true,
+  description: 'Account is not linked to an entity for its account type.',
+  errorCode: 'ACCOUNT_NOT_LINKED'
+}
+
+export const AccountLinkBrokenErrorType = {
+  name: 'AccountLinkBroken',
+  statusCode: StatusCodes.UNPROCESSABLE_ENTITY,
+  isOperational: true,
+  description: 'Account references an entity that no longer exists.',
+  errorCode: 'ACCOUNT_LINK_BROKEN'
+}
+
+export const DocInstanceNotFoundErrorType = {
+  name: 'DocInstanceNotFound',
+  statusCode: StatusCodes.NOT_FOUND,
+  isOperational: true,
+  description: 'The requested document is not available.',
+  errorCode: 'DOC_INSTANCE_NOT_FOUND'
+}
+
+export const PdfNotGeneratedErrorType = {
+  name: 'PdfNotGenerated',
+  statusCode: StatusCodes.NOT_FOUND,
+  isOperational: true,
+  description: 'The PDF for this document has not been generated yet.',
+  errorCode: 'PDF_NOT_GENERATED'
+}

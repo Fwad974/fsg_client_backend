@@ -163,3 +163,50 @@ export const USER_ROLE_TYPE = {
   PAYMENT: 'payment',
   DOCTOR: 'doctor'
 }
+
+export const ACCOUNT_TYPE = {
+  CORPORATE: 'corporate',
+  DOCTOR:    'doctor',
+  PATIENT:   'patient',
+  PAYMENT:   'payment'
+}
+
+export const ACCOUNT_TYPE_TO_ROLE_TYPES = {
+  corporate: ['CORPORATE', 'PAYMENT'],
+  patient:   ['PATIENT'],
+  doctor:    ['DOCTOR']
+}
+
+export const DOC_INSTANCE_STATUS = {
+  RESERVED: 'reserved',
+  ANALYSIS: 'pendingAnalysis',
+  PREVIEW:  'pendingPreview',
+  REVIEW:   'pendingReview',
+  APPROVAL: 'pendingApproval',
+  RELEASED: 'released',
+  AUTO:     'auto'
+}
+
+export const TEST_RESULT_STATUS = {
+  PENDING:          'pending',
+  PENDING_REFERRAL: 'pending_referral',
+  READY:            'ready',
+  REFERRED:         'referred',
+  DISCARD:          'discard',
+  REJECTED:         'rejected',
+  STORED:           'stored',
+  ACCEPTED:         'accepted',
+  ON_HOLD:          'on-hold',
+  IN_PROGRESS:      'in-progress',
+  PROCESSING:       'processing',
+  COMPLETED:        'completed'
+}
+
+export const LAB_STATUS = {
+  CFDNA:             'cfdna',
+  LIBRARY:           'library',
+  POOLING:           'pooling',
+  DNB:               'dnb',
+  RECORD_MANAGEMENT: 'record-management'
+}
+
