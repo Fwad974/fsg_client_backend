@@ -36,7 +36,7 @@ export default (sequelize, DataTypes) => {
       field: 'test_category'
     },
     specimenType: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
       field: 'specimen_type'
     },
@@ -104,6 +104,37 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'proposed_internal_tat'
+    },
+    isReferral: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'is_referral'
+    },
+    testSubCategory: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'test_sub_category'
+    },
+    financeDepartment: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'finance_department'
+    },
+    outsourceLabTestCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'outsource_lab_test_code'
+    },
+    storageStability: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'storage_stability'
+    },
+    clientTat: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'client_tat'
     },
     createdAt: {
       allowNull: false,

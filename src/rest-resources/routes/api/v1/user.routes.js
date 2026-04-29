@@ -69,16 +69,11 @@ const postLoginSchemas = {
   bodySchema: {
     type: 'object',
     properties: {
-      uuid: { type: 'string' },
       userNameOrPhone: { type: 'string' },
-      password: { type: 'string' },
-      userToken: { type: 'number' },
-      userType: {
-        type: "string",
-        enum: ["individual", "corporate", "doctor", "payment"]
-      }
+      password:        { type: 'string' },
+      accountType:     { type: 'string', enum: ['corporate', 'patient', 'doctor'] }
     },
-    required: ['userNameOrPhone', 'password', 'userType']
+    required: ['userNameOrPhone', 'password', 'accountType']
   },
   responseSchema: {
     default: {
@@ -161,58 +156,6 @@ const putUpdatePhoneSchemas = {
   }
 }
 
-const putUpdateProfileSchemas = {
-  bodySchema: {
-    type: 'object',
-    properties: {
-      userName: {
-        type: 'string',
-        pattern: "^[A-Za-z0-9-~#^()\\[\\]{}\"':;<,>./|\\\\_]{5,50}$",
-        minLength: 2,
-        maxLength: 50
-      },
-      firstName: {
-        type: 'string',
-        pattern: '^[a-zA-Z]*$',
-        minLength: 2,
-        maxLength: 50
-      },
-      lastName: {
-        type: 'string',
-        pattern: '^[a-zA-Z]*$',
-        minLength: 2,
-        maxLength: 50
-      },
-      dateOfBirth: {
-        type: 'string'
-      },
-      signInIp: {
-        type: 'string'
-      },
-      gender: {
-        type: 'string',
-        enum: ['male', 'female', 'other']
-      },
-      phone: { type: 'string' },
-      phoneCode: { type: 'string' }
-    }
-  },
-  responseSchema: {
-    default: {
-      type: 'object',
-      properties: {
-        userName: { $ref: '/user.json#/properties/userName' },
-        firstName: { $ref: '/user.json#/properties/firstName' },
-        lastName: { $ref: '/user.json#/properties/lastName' },
-        dateOfBirth: { $ref: '/user.json#/properties/dateOfBirth' },
-        phone: { $ref: '/user.json#/properties/phone' },
-        phoneCode: { $ref: '/user.json#/properties/phoneCode' }
-      },
-      required: ['message']
-    }
-  }
-}
-
 const verifySmsOtpSchemas = {
   bodySchema: {
     type: 'object',
@@ -246,53 +189,6 @@ const resendSmsOtpSchemas = {
       type: 'object',
       properties: {
         message: { type: 'string' }
-      },
-      required: ['message']
-    }
-  }
-}
-
-const postContactRequestSchemas = {
-  bodySchema: {
-    type: 'object',
-    properties: {
-      name: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      },
-      email: {
-        type: 'string',
-        format: 'email',
-        maxLength: 255
-      },
-      address: {
-        type: 'string',
-        maxLength: 500
-      },
-      contactNumber: {
-        type: 'string',
-        pattern: '^\\+?[0-9\\s\\-\\(\\)]{7,20}$',
-        maxLength: 20
-      },
-      organization: {
-        type: 'string',
-        maxLength: 100
-      },
-      message: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 1000
-      }
-    },
-    required: ['name', 'email', 'message']
-  },
-  responseSchema: {
-    default: {
-      type: 'object',
-      properties: {
-        message: { type: 'string' },
-        requestId: { type: 'string' }
       },
       required: ['message']
     }
@@ -374,17 +270,6 @@ userRoutes
   )
 
 userRoutes
-  .route('/update-profile')
-  .put(
-    contextMiddleware(true),
-    rateLimiterMiddleware,
-    authenticationMiddleWare,
-    requestValidationMiddleware(putUpdateProfileSchemas),
-    UserController.updateProfile,
-    responseValidationMiddleware(putUpdateProfileSchemas)
-  )
-
-userRoutes
   .route('/verify-phone-otp')
   .put(
     contextMiddleware(true),
@@ -400,16 +285,6 @@ userRoutes
     requestValidationMiddleware(resendSmsOtpSchemas),
     UserController.resendSmsOtpSignup,
     responseValidationMiddleware(resendSmsOtpSchemas)
-  )
-
-  userRoutes
-  .route('/contact-request')
-  .post(
-    contextMiddleware(true),
-    authenticationMiddleWare,
-    requestValidationMiddleware(postContactRequestSchemas),
-    UserController.createContactRequest,
-    responseValidationMiddleware(postContactRequestSchemas)
   )
 
 export default userRoutes

@@ -1,40 +1,22 @@
-import { sendResponse } from '../../helpers/response.helpers'
 import GetCorporatePatientsService from '../../services/corporate/getCorporatePatients.service'
-import GetCorporateDoctorsService from '../../services/corporate/getCorporateDoctors.service'
-import GetCorporatePatientsTestResultsService from '../../services/corporate/getCorporatePatientsTestResults.service'
-import GetCorporateTestResultsService from '../../services/corporate/getCorporateTestResults.service'
+import GetCorporatePatientsReportService from '../../services/corporate/getCorporatePatientsReport.service'
+import GetCorporatePatientsPresenter from '../../presenters/corporate/getCorporatePatients.presenter'
+import GetCorporatePatientsReportPresenter from '../../presenters/corporate/getCorporatePatientsReport.presenter'
+import { sendResponse } from '../../helpers/response.helpers'
 
 export default class CorporateController {
-  static async getCorporatePatients (req, res, next) {
+  static async getPatients (req, res, next) {
     try {
-      const { result, successful, errors } = await GetCorporatePatientsService.execute(req.query, req.context)
+      const { result, successful, errors } = await GetCorporatePatientsService.execute(req.query, req.context, GetCorporatePatientsPresenter)
       sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
     } catch (error) {
       next(error)
     }
   }
 
-  static async getCorporateDoctors (req, res, next) {
+  static async getPatientsReport (req, res, next) {
     try {
-      const { result, successful, errors } = await GetCorporateDoctorsService.execute(req.query, req.context)
-      sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  static async getCorporatePatientsTestResults (req, res, next) {
-    try {
-      const { result, successful, errors } = await GetCorporatePatientsTestResultsService.execute(req.query, req.context)
-      sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  static async getCorporateTestResults (req, res, next) {
-    try {
-      const { result, successful, errors } = await GetCorporateTestResultsService.execute(req.query, req.context)
+      const { result, successful, errors } = await GetCorporatePatientsReportService.execute(req.query, req.context, GetCorporatePatientsReportPresenter)
       sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
     } catch (error) {
       next(error)

@@ -1,241 +1,101 @@
 import express from 'express'
 import DoctorController from '../../../controllers/doctor.controller'
-import authenticationMiddleWare from '../../../middlewares/authentication.middleware'
+import authenticationMiddleware from '../../../middlewares/authentication.middleware'
 import contextMiddleware from '../../../middlewares/context.middleware'
+import { checkPermission } from '../../../middlewares/checkPermission.middleware'
 import requestValidationMiddleware from '../../../middlewares/requestValidation.middleware'
 import responseValidationMiddleware from '../../../middlewares/responseValidation.middleware'
-import { checkPermission } from '../../../middlewares/checkPermission.middleware'
 
-const getDoctorPatientsSchemas = {
+const getPatientsSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
+      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset:         { type: ['number', 'string'], minimum: 0 },
+      search:         { type: 'string' },
+      orderBy:        { type: 'string' },
+      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
     }
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
-        count: { type: 'number' },
-        rows: {
+        message: { type: 'string' },
+        data: {
           type: 'array',
           items: {
             type: 'object',
             properties: {
-              individuals: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number' },
-                    user: {
-                      type: 'object',
-                      properties: {
-                        userName: { type: ['string', 'null'] },
-                        uuid: { type: 'string' },
-                        email: { type: ['string', 'null'] },
-                        phone: { type: ['string', 'null'] }
-                      }
-                    }
-                  }
-                }
-              }
+              patientId: { $ref: '/patient.json#/properties/uuid' },
+              name:      { type: ['string', 'null'] },
+              dateOfBirth: { $ref: '/patient.json#/properties/dateOfBirth' },
+              mobile:    { type: ['string', 'null'] },
+              email:     { $ref: '/patient.json#/properties/email' }
             }
           }
-        }
+        },
+        count: { type: 'number' }
       },
-      required: ['count', 'rows']
+      required: ['message', 'data', 'count']
     }
   }
 }
 
-const getDoctorPatientsTestResultsSchemas = {
+const getPatientsReportSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
+      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset:         { type: ['number', 'string'], minimum: 0 },
+      orderBy:        { type: 'string' },
+      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
     }
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
-        count: { type: 'number' },
-        rows: {
+        message: { type: 'string' },
+        data: {
           type: 'array',
           items: {
             type: 'object',
             properties: {
-              id: { type: 'number' },
-              individualId: { type: 'number' },
-              corporateId: { type: ['number', 'null'] },
-              doctorId: { type: ['number', 'null'] },
-              name: { type: 'string' },
-              status: { type: 'string' },
-              sample: { type: 'string' },
-              duration: { type: ['number', 'null'] },
-              errorMessage: { type: ['string', 'null'] },
-              errorType: { type: ['string', 'null'] },
-              startTime: { type: ['string', 'null'], format: 'date-time' },
-              endTime: { type: ['string', 'null'], format: 'date-time' },
-              createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' },
-              individual: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number' },
-                  userId: { type: 'number' },
-                  dateOfBirth: { type: ['string', 'null'], format: 'date-time' },
-                  gender: { type: ['string', 'null'] },
-                  user: {
-                    type: 'object',
-                    properties: {
-                      id: { type: 'number' },
-                      firstName: { type: ['string', 'null'] },
-                      lastName: { type: ['string', 'null'] },
-                      email: { type: ['string', 'null'] },
-                      phone: { type: ['string', 'null'] }
-                    }
-                  }
-                }
-              }
+              patientId:       { $ref: '/patient.json#/properties/uuid' },
+              patientName:     { type: ['string', 'null'] },
+              visiteDate:      { $ref: '/testResult.json#/properties/createdAt' },
+              testDone:        { type: ['string', 'null'] },
+              reportDate:      { $ref: '/docInstance.json#/properties/releasedDate' },
+              docInstanceUuid: { $ref: '/docInstance.json#/properties/uuid' }
             }
           }
-        }
+        },
+        count: { type: 'number' }
       },
-      required: ['count', 'rows']
-    }
-  }
-}
-
-const getDoctorTestResultsSchemas = {
-  querySchema: {
-    type: 'object',
-    properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
-    }
-  },
-  responseSchema: {
-    default: {
-      type: 'object',
-      properties: {
-        count: { type: 'number' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              testResults: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number' },
-                    name: { type: 'string' },
-                    status: { type: 'string' },
-                    sample: { type: 'string' },
-                    duration: { type: ['number', 'null'] },
-                    errorMessage: { type: ['string', 'null'] },
-                    errorType: { type: ['string', 'null'] },
-                    startTime: { type: ['string', 'null'], format: 'date-time' },
-                    endTime: { type: ['string', 'null'], format: 'date-time' },
-                    fileUuid: { type: ['string', 'null'] },
-                    fileName: { type: ['string', 'null'] },
-                    createdAt: { type: 'string', format: 'date-time' },
-                    individual: {
-                      type: 'object',
-                      properties: {
-                        id: { type: 'number' },
-                        user: {
-                          type: 'object',
-                          properties: {
-                            userName: { type: ['string', 'null'] },
-                            uuid: { type: 'string' },
-                            email: { type: ['string', 'null'] },
-                            phone: { type: ['string', 'null'] }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      required: ['count', 'rows']
+      required: ['message', 'data', 'count']
     }
   }
 }
 
 const doctorRoutes = express.Router()
 
-doctorRoutes.route('/get-patients')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getDoctorPatientsSchemas),
-  authenticationMiddleWare,
+doctorRoutes.route('/patients').get(
+  contextMiddleware(false),
+  authenticationMiddleware,
   checkPermission,
-  DoctorController.getDoctorPatients,
-  responseValidationMiddleware(getDoctorPatientsSchemas)
+  requestValidationMiddleware(getPatientsSchemas),
+  DoctorController.getPatients,
+  responseValidationMiddleware(getPatientsSchemas)
 )
 
-doctorRoutes.route('/get-patients-test-results')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getDoctorPatientsTestResultsSchemas),
-  authenticationMiddleWare,
+doctorRoutes.route('/patients-report').get(
+  contextMiddleware(false),
+  authenticationMiddleware,
   checkPermission,
-  DoctorController.getDoctorPatientsTestResults,
-  responseValidationMiddleware(getDoctorPatientsTestResultsSchemas)
-)
-
-doctorRoutes.route('/get-test-results')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getDoctorTestResultsSchemas),
-  authenticationMiddleWare,
-  checkPermission,
-  DoctorController.getDoctorTestResults,
-  responseValidationMiddleware(getDoctorTestResultsSchemas)
+  requestValidationMiddleware(getPatientsReportSchemas),
+  DoctorController.getPatientsReport,
+  responseValidationMiddleware(getPatientsReportSchemas)
 )
 
 export default doctorRoutes
