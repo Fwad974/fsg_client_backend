@@ -1,305 +1,101 @@
 import express from 'express'
 import CorporateController from '../../../controllers/corporate.controller'
-import authenticationMiddleWare from '../../../middlewares/authentication.middleware'
+import authenticationMiddleware from '../../../middlewares/authentication.middleware'
 import contextMiddleware from '../../../middlewares/context.middleware'
+import { checkPermission } from '../../../middlewares/checkPermission.middleware'
 import requestValidationMiddleware from '../../../middlewares/requestValidation.middleware'
 import responseValidationMiddleware from '../../../middlewares/responseValidation.middleware'
-import { checkPermission } from '../../../middlewares/checkPermission.middleware'
 
-const getCorporatePatientsSchemas = {
+const getPatientsSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
+      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset:         { type: ['number', 'string'], minimum: 0 },
+      search:         { type: 'string' },
+      orderBy:        { type: 'string' },
+      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
     }
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
-        count: { type: 'number' },
-        rows: {
+        message: { type: 'string' },
+        data: {
           type: 'array',
           items: {
             type: 'object',
             properties: {
-              individuals: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number' },
-                    user: {
-                      type: 'object',
-                      properties: {
-                        userName: { type: ['string', 'null'] },
-                        uuid: { type: 'string' },
-                        email: { type: ['string', 'null'] },
-                        phone: { type: ['string', 'null'] }
-                      }
-                    }
-                  }
-                }
-              }
+              patientId: { $ref: '/patient.json#/properties/uuid' },
+              name:      { type: ['string', 'null'] },
+              dateOfBirth: { $ref: '/patient.json#/properties/dateOfBirth' },
+              mobile:    { type: ['string', 'null'] },
+              email:     { $ref: '/patient.json#/properties/email' }
             }
           }
-        }
+        },
+        count: { type: 'number' }
       },
-      required: ['count', 'rows']
+      required: ['message', 'data', 'count']
     }
   }
 }
 
-const getCorporateDoctorsSchemas = {
+const getPatientsReportSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
+      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset:         { type: ['number', 'string'], minimum: 0 },
+      orderBy:        { type: 'string' },
+      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
     }
   },
   responseSchema: {
     default: {
       type: 'object',
       properties: {
-        count: { type: 'number' },
-        rows: {
+        message: { type: 'string' },
+        data: {
           type: 'array',
           items: {
             type: 'object',
             properties: {
-              id: { type: 'number' },
-              userId: { type: 'number' },
-              licenseNumber: { type: ['string', 'null'] },
-              specialty: { type: ['string', 'null'] },
-              createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' },
-              user: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number' },
-                  firstName: { type: ['string', 'null'] },
-                  lastName: { type: ['string', 'null'] },
-                  email: { type: ['string', 'null'] },
-                  phone: { type: ['string', 'null'] }
-                }
-              }
+              patientId:       { $ref: '/patient.json#/properties/uuid' },
+              patientName:     { type: ['string', 'null'] },
+              visiteDate:      { $ref: '/testResult.json#/properties/createdAt' },
+              testDone:        { type: ['string', 'null'] },
+              reportDate:      { $ref: '/docInstance.json#/properties/releasedDate' },
+              docInstanceUuid: { $ref: '/docInstance.json#/properties/uuid' }
             }
           }
-        }
+        },
+        count: { type: 'number' }
       },
-      required: ['count', 'rows']
-    }
-  }
-}
-
-const getCorporatePatientsTestResultsSchemas = {
-  querySchema: {
-    type: 'object',
-    properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
-    }
-  },
-  responseSchema: {
-    default: {
-      type: 'object',
-      properties: {
-        count: { type: 'number' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              individualId: { type: 'number' },
-              corporateId: { type: ['number', 'null'] },
-              doctorId: { type: ['number', 'null'] },
-              name: { type: 'string' },
-              status: { type: 'string' },
-              sample: { type: 'string' },
-              duration: { type: ['number', 'null'] },
-              errorMessage: { type: ['string', 'null'] },
-              errorType: { type: ['string', 'null'] },
-              startTime: { type: ['string', 'null'], format: 'date-time' },
-              endTime: { type: ['string', 'null'], format: 'date-time' },
-              createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' },
-              individual: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number' },
-                  userId: { type: 'number' },
-                  dateOfBirth: { type: ['string', 'null'], format: 'date-time' },
-                  gender: { type: ['string', 'null'] },
-                  user: {
-                    type: 'object',
-                    properties: {
-                      id: { type: 'number' },
-                      firstName: { type: ['string', 'null'] },
-                      lastName: { type: ['string', 'null'] },
-                      email: { type: ['string', 'null'] },
-                      phone: { type: ['string', 'null'] }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      required: ['count', 'rows']
+      required: ['message', 'data', 'count']
     }
   }
 }
 
 const corporateRoutes = express.Router()
 
-corporateRoutes.route('/get-patients')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getCorporatePatientsSchemas),
-  authenticationMiddleWare,
+corporateRoutes.route('/patients').get(
+  contextMiddleware(false),
+  authenticationMiddleware,
   checkPermission,
-  CorporateController.getCorporatePatients,
-  responseValidationMiddleware(getCorporatePatientsSchemas)
+  requestValidationMiddleware(getPatientsSchemas),
+  CorporateController.getPatients,
+  responseValidationMiddleware(getPatientsSchemas)
 )
 
-corporateRoutes.route('/get-doctors')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getCorporateDoctorsSchemas),
-  authenticationMiddleWare,
+corporateRoutes.route('/patients-report').get(
+  contextMiddleware(false),
+  authenticationMiddleware,
   checkPermission,
-  CorporateController.getCorporateDoctors,
-  responseValidationMiddleware(getCorporateDoctorsSchemas)
-)
-
-corporateRoutes.route('/get-patients-test-results')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getCorporatePatientsTestResultsSchemas),
-  authenticationMiddleWare,
-  checkPermission,
-  CorporateController.getCorporatePatientsTestResults,
-  responseValidationMiddleware(getCorporatePatientsTestResultsSchemas)
-)
-
-const getCorporateTestResultsSchemas = {
-  querySchema: {
-    type: 'object',
-    properties: {
-      limit: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      offset: {
-        type: 'string',
-        pattern: '^[0-9]+$'
-      },
-      searchTerm: {
-        type: 'string',
-        minLength: 1,
-        maxLength: 100
-      }
-    }
-  },
-  responseSchema: {
-    default: {
-      type: 'object',
-      properties: {
-        count: { type: 'number' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              testResults: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number' },
-                    name: { type: 'string' },
-                    status: { type: 'string' },
-                    sample: { type: 'string' },
-                    duration: { type: ['number', 'null'] },
-                    errorMessage: { type: ['string', 'null'] },
-                    errorType: { type: ['string', 'null'] },
-                    startTime: { type: ['string', 'null'], format: 'date-time' },
-                    endTime: { type: ['string', 'null'], format: 'date-time' },
-                    fileUuid: { type: ['string', 'null'] },
-                    fileName: { type: ['string', 'null'] },
-                    createdAt: { type: 'string', format: 'date-time' },
-                    individual: {
-                      type: 'object',
-                      properties: {
-                        id: { type: 'number' },
-                        user: {
-                          type: ['object', 'null'],
-                          properties: {
-                            userName: { type: ['string', 'null'] },
-                            uuid: { type: 'string' },
-                            email: { type: ['string', 'null'] },
-                            phone: { type: ['string', 'null'] }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      required: ['count', 'rows']
-    }
-  }
-}
-
-corporateRoutes.route('/get-test-results')
-.get(
-  contextMiddleware(),
-  requestValidationMiddleware(getCorporateTestResultsSchemas),
-  authenticationMiddleWare,
-  checkPermission,
-  CorporateController.getCorporateTestResults,
-  responseValidationMiddleware(getCorporateTestResultsSchemas)
+  requestValidationMiddleware(getPatientsReportSchemas),
+  CorporateController.getPatientsReport,
+  responseValidationMiddleware(getPatientsReportSchemas)
 )
 
 export default corporateRoutes
