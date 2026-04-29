@@ -66,18 +66,18 @@ export default (sequelize, DataTypes) => {
       as: 'users'
     })
 
-    Doctor.belongsToMany(models.Individual, {
-      through: 'individual_doctors',
+    Doctor.belongsToMany(models.Patient, {
+      through: 'patient_doctors',
       foreignKey: 'doctorId',
-      otherKey: 'individualId',
-      as: 'individuals'
+      otherKey: 'patientId',
+      as: 'patients'
     })
 
-    Doctor.belongsToMany(models.Corporate, {
-      through: 'corporate_doctors',
+    Doctor.belongsToMany(models.Hospital, {
+      through: 'hospital_doctors',
       foreignKey: 'doctorId',
-      otherKey: 'corporateId',
-      as: 'corporates'
+      otherKey: 'hospitalId',
+      as: 'hospitals'
     })
 
     Doctor.hasMany(models.TestResult, {

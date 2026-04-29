@@ -8,13 +8,14 @@ export default class TestCategoryRepository extends ITestCategoryRepository {
     const {
       transaction,
       search,
-      limit,
-      offset,
+      limit = 10,
+      offset = 0,
+      orderBy = 'id',
+      orderDirection = 'ASC',
       attributes = ['id', 'testCode', 'testName', 'description', 'serviceCategory', 'tat', 'testCategory']
     } = options
 
     const whereClause = {}
-
     if (search) {
       whereClause[Op.or] = [
         { testCode: { [Op.iLike]: `%${search}%` } },
@@ -22,24 +23,15 @@ export default class TestCategoryRepository extends ITestCategoryRepository {
       ]
     }
 
-    const queryOptions = {
+    return await TestCategoryModel.findAndCountAll({
       where: whereClause,
       attributes,
+      limit,
+      offset,
+      order: [[orderBy, orderDirection]],
       transaction,
-      raw: true,
-      nest: true
-    }
-
-    // Only add limit and offset if provided
-    if (limit !== undefined && limit !== null) {
-      queryOptions.limit = limit
-    }
-
-    if (offset !== undefined && offset !== null) {
-      queryOptions.offset = offset
-    }
-
-    return await TestCategoryModel.findAndCountAll(queryOptions)
+      raw: true
+    })
   }
 
   static async findById (id, options = {}) {
