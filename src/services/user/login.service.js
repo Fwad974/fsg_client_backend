@@ -5,103 +5,66 @@ import config from '../../configs/app.config'
 import ServiceBase from '../../libs/serviceBase'
 import { setData } from '../../helpers/redis.helpers'
 import { getUserTokenCacheKey } from '../../utils/user.utils'
+import { ACCOUNT_TYPE_TO_ROLE_TYPES } from '../../libs/constants'
 import UserRepository from '../../infrastructure/repositories/userRepository'
-import GenerateVerificationCodeService from '../generateCode/generateVerificationCode.service'
-import { TOKEN_TYPE } from '../../libs/constants'
-import Logger from '../../libs/logger'
+import ValidateUserAccountLinkService from './validateUserAccountLink.service'
 
 const schema = {
   type: 'object',
   properties: {
     userNameOrPhone: { type: 'string' },
-    password: { type: 'string' },
-    userToken: { type: 'number' },
-    userType: {
-      type: "string",
-      enum: ["individual", "corporate", "doctor", "payment"]
-    }
+    password:        { type: 'string' },
+    accountType:     { type: 'string', enum: ['corporate', 'patient', 'doctor'] }
   },
-  required: ['userNameOrPhone', 'password', 'userType']
+  required: ['userNameOrPhone', 'password', 'accountType']
 }
 
 const constraints = ajv.compile(schema)
 
-/**
- * it provides service of login for a user
- * @export
- * @class LoginService
- * @extends {ServiceBase}
- */
 export default class LoginService extends ServiceBase {
-  get constraints () {
-    return constraints
-  }
+  get constraints () { return constraints }
 
   async run () {
-    const {
-      sequelizeTransaction
-    } = this.context
+    const { sequelizeTransaction, logger } = this.context
+    const { userNameOrPhone: rawIdentifier, password: rawPassword, accountType } = this.args
 
-    Logger.info('LoginService: ', { message: 'this is the this.args', context: { args: JSON.stringify(this.args) } })
+    const userNameOrPhone = rawIdentifier?.trim()?.toLowerCase?.()
+    const password = rawPassword?.trim()
+    const roleTypes = ACCOUNT_TYPE_TO_ROLE_TYPES[accountType]
 
-    const userObj = {
-      userNameOrPhone: this.args.userNameOrPhone?.trim()?.toLowerCase?.(),
-      password: this.args.password?.trim(),
-      userToken: this.args.userToken,
-      userType: this.args.userType
-    }
+    logger.info('LoginService: ', { message: 'Authenticating user against role-mapped accountType', context: { accountType: JSON.stringify(accountType), userNameOrPhone: JSON.stringify(userNameOrPhone) } })
 
-    const user = await UserRepository.findByUserNameOrPhoneAndTypeWithUserRole(userObj.userNameOrPhone, userObj.userType, {
-      attributes: ['id', 'encryptedPassword', 'phone', 'userName', 'signInCount', 'phoneVerified', 'uuid', 'firstName', 'lastName', 'email'],
-      roleAttributes: ['name']
+    const user = await UserRepository.findByUserNameOrPhoneWithRoleIn(userNameOrPhone, roleTypes, {
+      roleAttributes: ['id', 'name']
     })
-    Logger.info('LoginService: ', { message: 'this is the user', context: { user: JSON.stringify(user) } })
+    logger.info('LoginService: ', { message: 'this is the user:', context: { user: JSON.stringify(user) } })
 
     if (!user) return this.addError('UserNotExistsErrorType')
+    if (!user.encryptedPassword) return this.addError('PasswordExpiredErrorType')
 
-    if (!user.encryptedPassword) {
-      return this.addError('PasswordExpired', 'Password expired, please reset it.')
-    }
+    const passwordOk = await this.isValidPassword(user.encryptedPassword, password)
+    if (!passwordOk) return this.addError('InvalidCredentialsErrorType')
 
-    const isPasswordValid = await this.isValidPassword(user.encryptedPassword, userObj.password)
-    if (!isPasswordValid) {
-      return this.addError('InvalidCredentialsErrorType', 'Wrong Password')
-    }
+    const linkResult = await ValidateUserAccountLinkService.run({ accountType: user.accountType, hospitalId: user.hospitalId, doctorId: user.doctorId, patientId: user.patientId }, this.context)
+    if (!linkResult) return this.addError('AccountNotLinkedErrorType')
 
-    if (!user.phoneVerified) {
-      await GenerateVerificationCodeService.run({ phoneNumber: user.phone, userId: user.id, userName: user.userName, tokenType: TOKEN_TYPE.phone }, this.context)
+    await UserRepository.update(user.id, { signInCount: user.signInCount + 1, lastLogin: new Date() }, sequelizeTransaction)
 
-      return this.addError('PhoneNotVerifiedErrorType', `phone number of ${userObj.userNameOrEmail} is not verified, please check your sms delivery.`)
-    }
+    const accessToken = jwt.sign({ id: user.id, phone: user.phone }, config.get('jwt.loginTokenSecret'), { expiresIn: config.get('jwt.loginTokenExpiry') })
 
-    const userUpdateObject = {
-      signInCount: user.signInCount + 1,
-      lastLogin: Date.now()
-    }
+    setData(getUserTokenCacheKey(user.id), accessToken, config.get('jwt.loginTokenExpiry'))
 
-    await UserRepository.update(user.id, userUpdateObject, sequelizeTransaction)
-
-    const accessToken = await jwt.sign(
-      { id: user.id, phone: user.phone },
-      config.get('jwt.loginTokenSecret'),
-      { expiresIn: config.get('jwt.loginTokenExpiry') }
-    )
-
-    // set token in redis
-    const cacheTokenKey = getUserTokenCacheKey(user.id)
-    setData(cacheTokenKey, accessToken, config.get('jwt.loginTokenExpiry'))
+    logger.info('LoginService: ', { message: 'Token issued and cached for valid login', context: { userId: JSON.stringify(user.id), accountType: JSON.stringify(user.accountType) } })
 
     return { message: 'Authentication successful', accessToken, user }
   }
 
   async isValidPassword (encryptedPassword, inputPassword) {
+    const { logger } = this.context
     try {
-      const passwordMatches = await bcrypt.compare(inputPassword, encryptedPassword)
-
-      if (passwordMatches) return true
+      return await bcrypt.compare(inputPassword, encryptedPassword)
     } catch (error) {
-      Logger.error('Login: ', { message: `isValidPassword: Password validation error: ${error.message}`, exception: error })
-
+      logger.error('LoginService: ', { message: `bcrypt comparison failed: ${error.message}`, exception: error })
       return false
     }
   }

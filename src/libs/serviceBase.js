@@ -18,10 +18,12 @@ class ServiceBase {
   #_successful = null
   #_failed = null
   #_result = null
+  #_presenter = null
 
   constructor () {
     this.#_args = arguments[0]
     this.#_context = arguments[1]
+    this.#_presenter = arguments[2]
     this.#_errors = {}
     this.#_successful = null
     this.#_failed = null
@@ -121,6 +123,11 @@ class ServiceBase {
     }
     try {
       this.#_result = await this.run()
+
+      // Transform result if presenter is provided
+      if (this.#_presenter && typeof this.#_presenter.present === 'function') {
+        this.#_result = this.#_presenter.present(this.#_result)
+      }
     } catch (error) {
       logger.error('Exception raised in Service', { klass: this.constructor, message: error.message, context: this.args, exception: error, userCtx: this.context })
       throw error

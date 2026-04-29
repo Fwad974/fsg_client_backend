@@ -15,9 +15,14 @@ export const checkPermission = async (req, res, next) => {
     } = req.context
 
     const userDetails = await UserRepository.findByIdWithRoles(userId, {
-      attributes: ['id'],
-      roleAttributes: ['permission']
+      attributes: ['id', 'accountType'],
+      roleAttributes: ['roleType', 'permission']
     })
+
+    req.context.role = {
+      accountType: userDetails.accountType,
+      roleType: userDetails.role?.roleType
+    }
 
     // To merge Role permission and extra permission given to user
     const permissions = { ...userDetails.role?.permission }

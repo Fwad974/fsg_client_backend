@@ -11,15 +11,30 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true
     },
+    uuid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'uuid'
+    },
     userRoleId: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    doctorId: {
+    accountType: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'account_type'
+    },
+    patientId: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      unique: true
+    },
+    hospitalId: {
       type: DataTypes.BIGINT,
       allowNull: true
     },
-    corporateId: {
+    doctorId: {
       type: DataTypes.BIGINT,
       allowNull: true
     },
@@ -28,6 +43,10 @@ export default (sequelize, DataTypes) => {
       allowNull: true
     },
     lastName: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    userName: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -74,26 +93,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    userName: {
-      type: DataTypes.STRING,
+    lastLogin: {
+      type: DataTypes.DATE,
       allowNull: true
     },
     deletedAt: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    lastLogin: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    userType: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    uuid: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'uuid'
     }
   }, {
     sequelize,
@@ -101,13 +107,28 @@ export default (sequelize, DataTypes) => {
     tableName: 'users',
     schema: 'public',
     timestamps: true,
-    paranoid: true,
+    paranoid: true
   })
 
   User.associate = models => {
-    User.hasMany(models.PaymentTransaction, {
-      foreignKey: 'actioneeId',
-      as: 'paymentTransactions'
+    User.belongsTo(models.UserRole, {
+      foreignKey: 'userRoleId',
+      as: 'role'
+    })
+
+    User.belongsTo(models.Patient, {
+      foreignKey: 'patientId',
+      as: 'patient'
+    })
+
+    User.belongsTo(models.Hospital, {
+      foreignKey: 'hospitalId',
+      as: 'hospital'
+    })
+
+    User.belongsTo(models.Doctor, {
+      foreignKey: 'doctorId',
+      as: 'doctor'
     })
 
     User.hasMany(models.UserToken, {
@@ -116,26 +137,6 @@ export default (sequelize, DataTypes) => {
 
     User.hasMany(models.ContactRequest, {
       foreignKey: 'userId'
-    })
-
-    User.belongsTo(models.UserRole, {
-      foreignKey: 'userRoleId',
-      as: 'role'
-    })
-
-    User.hasOne(models.Individual, {
-      foreignKey: 'userId',
-      as: 'individualProfile'
-    })
-
-    User.belongsTo(models.Corporate, {
-      foreignKey: 'corporateId',
-      as: 'corporate'
-    })
-
-    User.belongsTo(models.Doctor, {
-      foreignKey: 'doctorId',
-      as: 'doctor'
     })
   }
 

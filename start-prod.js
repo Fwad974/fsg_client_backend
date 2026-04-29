@@ -20,13 +20,7 @@ async function runCommand(command, description) {
 
 (async () => {
   try {
-    // Step 1: Run migrations
-    await runCommand('npm run sequelize db:migrate', 'Database Migration')
-
-    // Step 2: Run seeders
-    await runCommand('npm run seed', 'Seeding Data')
-
-    // Step 3: Start the server using `spawn`
+    // Step 0: Start the server using `spawn`
     console.log('Starting the server...')
     const server = spawn('node', ['./dist/index.js'], { stdio: 'inherit' })
 

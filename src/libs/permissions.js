@@ -1,4 +1,4 @@
-// Request Type maps admin's action to permission
+// Request Type maps HTTP method to permission action
 export const REQUEST_TYPE = {
   GET: 'R',
   POST: 'C',
@@ -10,46 +10,38 @@ export const REQUEST_TYPE = {
 
 // Endpoint to Module mapper
 export const PERMISSION_TYPE = {
-  COPORATE: 'COPORATE',
-  USER: 'USER',
-  PAYMENT: 'PAYMENT',
-  DOCTOR: 'DOCTOR',
-  TRANSACTION: 'TRANSACTION',
-  REPORTS: 'REPORTS',
-  INDIVIDUAL: 'individual',
+  CORPORATE:    'CORPORATE',
+  DOCTOR:       'DOCTOR',
+  PATIENT:      'PATIENT',
+  PAYMENT:      'PAYMENT',
+  REPORTS:      'REPORTS',
+  TEST_CATALOG: 'TEST_CATALOG',
 
   aliases: {
-    // Dashboard
-    'dashboard/get-all-test-results': 'INDIVIDUAL',
-    'dashboard/get-patient-test-results': 'INDIVIDUAL',
-    'dashboard/get-patient-reports': 'INDIVIDUAL',
+    // hospital-account routes (URL prefix /corporate/* — public-facing vocab)
+    'corporate/patients':        'CORPORATE',
+    'corporate/patients-report': 'CORPORATE',
 
-    // transaction
-    'transaction/user-transactions': 'INDIVIDUAL',
-    'transaction/coprate-transactions': 'COPORATE',
+    // doctor routes
+    'doctor/patients':        'DOCTOR',
+    'doctor/patients-report': 'DOCTOR',
 
-    // doctor
-    'doctor/get-patients': 'DOCTOR',
-    'doctor/get-patients-test-results': 'DOCTOR',
-    'doctor/get-test-results': 'DOCTOR',
+    // patient routes
+    'patient/report-status': 'PATIENT',
 
-    // corporate
-    'corporate/get-patients': 'COPORATE',
-    'corporate/get-doctors': 'COPORATE',
-    'corporate/get-patients-test-results': 'COPORATE',
-    'corporate/get-test-results': 'COPORATE'
+    // shared report download (any role with REPORTS:R)
+    'reports/download': 'REPORTS',
 
-    // payment
-
+    // orderable catalog — corporate + doctor only
+    'tests/catalogs': 'TEST_CATALOG'
   }
 }
 
-// Permission Object
 export const PERMISSIONS = {
-  Dashboard: ['R'],
-  TRANSACTION: ['R'],
-  REPORTS: ['R'],
-  DOCTOR: ['R'],
-  COPORATE: ['R'],
-  INDIVIDUAL: ['R']
+  CORPORATE:    ['R'],
+  DOCTOR:       ['R'],
+  PATIENT:      ['R'],
+  PAYMENT:      ['R'],
+  REPORTS:      ['R'],
+  TEST_CATALOG: ['R']
 }

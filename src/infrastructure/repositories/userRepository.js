@@ -7,10 +7,24 @@ export default class UserRepository extends IUserRepository {
     const { User: UserModel } = models
 
     const {
-      attributes = ['id', 'uuid', 'doctorId', 'corporateId']
+      attributes = ['id', 'uuid', 'doctorId', 'hospitalId', 'patientId', 'accountType']
     } = options
 
     return await UserModel.findByPk(id, { attributes, raw: true })
+  }
+
+  static async findByIdAndType (id, accountType, options = {}) {
+    const { User: UserModel } = models
+
+    const {
+      attributes = ['id', 'uuid', 'doctorId', 'hospitalId', 'patientId']
+    } = options
+
+    return await UserModel.findOne({
+      where: { id, accountType },
+      attributes,
+      raw: true
+    })
   }
 
   static async findByIdWithRoles (id, options = {}) {
@@ -29,34 +43,30 @@ export default class UserRepository extends IUserRepository {
     })
   }
 
-  static async findByUserNameOrPhoneAndTypeWithUserRole (userNameOrPhone, userType, options = {}) {
+  static async findByUserNameOrPhoneWithRoleIn (userNameOrPhone, roleTypes, options = {}) {
     const { User: UserModel, UserRole: UserRoleModel } = models
 
     const {
-      attributes = ['id', 'uuid', 'phone'],
-      roleAttributes = ['id', 'name']
+      attributes = ['id', 'uuid', 'phone', 'userName', 'firstName', 'lastName', 'email', 'encryptedPassword', 'phoneVerified', 'signInCount', 'accountType', 'hospitalId', 'doctorId', 'patientId'],
+      roleAttributes = ['id', 'name', 'roleType', 'permission']
     } = options
 
     const whereCondition = {
-      userType,
       [Op.or]: [
-        {
-          userName: userNameOrPhone
-        },
-        {
-          phone: userNameOrPhone
-        }
+        { userName: userNameOrPhone },
+        { phone: userNameOrPhone }
       ]
     }
 
     const user = await UserModel.findOne({
       where: whereCondition,
       attributes,
-      include:[{
+      include: [{
         model: UserRoleModel,
-        attributes: roleAttributes,
         as: 'role',
-        require: true
+        attributes: roleAttributes,
+        where: { roleType: { [Op.in]: roleTypes } },
+        required: true
       }],
       raw: true,
       nest: true

@@ -1,6 +1,6 @@
 import UserRepository from '../../infrastructure/repositories/userRepository'
 import UserRoleRepository from '../../infrastructure/repositories/userRoleRepository'
-import IndividualRepository from '../../infrastructure/repositories/individualRepository'
+import IndividualRepository from '../../infrastructure/repositories/patientRepository'
 import bcrypt from 'bcrypt'
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
