@@ -29,7 +29,9 @@ const getCatalogsSchemas = {
             properties: {
               testName:       { $ref: '/testCategory.json#/properties/testName' },
               testCode:       { $ref: '/testCategory.json#/properties/testCode' },
-              turnAroundTime: { $ref: '/testCategory.json#/properties/tat' }
+              turnAroundTime: { $ref: '/testCategory.json#/properties/tat' },
+              specimenType:   { $ref: '/testCategory.json#/properties/specimenType' },
+              description:    { $ref: '/testCategory.json#/properties/description' }
             }
           }
         },

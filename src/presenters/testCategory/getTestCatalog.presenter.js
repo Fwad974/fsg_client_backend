@@ -3,9 +3,11 @@ class GetTestCatalogPresenter {
     if (!data) return null
 
     const rows = data.rows?.map(row => ({
-      testName: row.testName,
-      testCode: row.testCode,
-      turnAroundTime: row.tat
+      testName:       row.testName,
+      testCode:       row.testCode,
+      turnAroundTime: row.tat,
+      specimenType:   row.specimenType,
+      description:    row.description
     })) || []
 
     return {
