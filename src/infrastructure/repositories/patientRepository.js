@@ -35,8 +35,11 @@ export default class PatientRepository extends IPatientRepository {
     const whereClause = {}
     if (search) {
       whereClause[Op.or] = [
-        { firstName: { [Op.iLike]: `%${search}%` } },
-        { lastName:  { [Op.iLike]: `%${search}%` } }
+        { uuid:           { [Op.iLike]: `%${search}%` } },
+        { firstName:      { [Op.iLike]: `%${search}%` } },
+        { lastName:       { [Op.iLike]: `%${search}%` } },
+        { email:          { [Op.iLike]: `%${search}%` } },
+        { '$user.phone$': { [Op.iLike]: `%${search}%` } }
       ]
     }
 
@@ -87,8 +90,11 @@ export default class PatientRepository extends IPatientRepository {
     const whereClause = {}
     if (search) {
       whereClause[Op.or] = [
-        { firstName: { [Op.iLike]: `%${search}%` } },
-        { lastName:  { [Op.iLike]: `%${search}%` } }
+        { uuid:           { [Op.iLike]: `%${search}%` } },
+        { firstName:      { [Op.iLike]: `%${search}%` } },
+        { lastName:       { [Op.iLike]: `%${search}%` } },
+        { email:          { [Op.iLike]: `%${search}%` } },
+        { '$user.phone$': { [Op.iLike]: `%${search}%` } }
       ]
     }
 
