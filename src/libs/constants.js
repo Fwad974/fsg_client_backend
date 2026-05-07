@@ -172,7 +172,7 @@ export const ACCOUNT_TYPE = {
 }
 
 export const ACCOUNT_TYPE_TO_ROLE_TYPES = {
-  corporate: ['CORPORATE', 'PAYMENT'],
+  corporate: ['CORPORATE', 'ACCOUNTANT'],
   patient:   ['PATIENT'],
   doctor:    ['DOCTOR']
 }

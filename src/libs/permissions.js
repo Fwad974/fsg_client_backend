@@ -13,7 +13,7 @@ export const PERMISSION_TYPE = {
   CORPORATE:    'CORPORATE',
   DOCTOR:       'DOCTOR',
   PATIENT:      'PATIENT',
-  PAYMENT:      'PAYMENT',
+  ACCOUNTANT:   'ACCOUNTANT',
   REPORTS:      'REPORTS',
   TEST_CATALOG: 'TEST_CATALOG',
 
@@ -41,7 +41,7 @@ export const PERMISSIONS = {
   CORPORATE:    ['R'],
   DOCTOR:       ['R'],
   PATIENT:      ['R'],
-  PAYMENT:      ['R'],
+  ACCOUNTANT:   ['R'],
   REPORTS:      ['R'],
   TEST_CATALOG: ['R']
 }
