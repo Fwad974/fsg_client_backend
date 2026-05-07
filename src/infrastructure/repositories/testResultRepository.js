@@ -68,20 +68,43 @@ export default class TestResultRepository extends ITestResultRepository {
       status,
       labStatus,
       docInstanceStatus,
+      visitDateFrom,
+      visitDateTo,
+      patientName,
+      patientId,
       limit = 10,
       offset = 0,
       orderBy = 'releasedDate',
       orderDirection = 'DESC'
     } = options
 
+    const where = { hospitalId, status, labStatus }
+    if (visitDateFrom || visitDateTo) {
+      where.createdAt = {}
+      if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
+      if (visitDateTo)   where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+    }
+
+    const patientWhere = {}
+    if (patientName) {
+      patientWhere[Op.or] = [
+        { firstName: { [Op.iLike]: `%${patientName}%` } },
+        { lastName:  { [Op.iLike]: `%${patientName}%` } }
+      ]
+    }
+    if (patientId) {
+      patientWhere.uuid = { [Op.iLike]: `${patientId}%` }
+    }
+
     const rows = await TestResultModel.findAll({
-      where: { hospitalId, status, labStatus },
+      where,
       attributes: ['uuid', 'createdAt'],
       include: [
         {
           model: PatientModel,
           as: 'patient',
           required: true,
+          where: patientWhere,
           attributes: ['uuid', 'firstName', 'lastName']
         },
         {
@@ -116,20 +139,43 @@ export default class TestResultRepository extends ITestResultRepository {
       status,
       labStatus,
       docInstanceStatus,
+      visitDateFrom,
+      visitDateTo,
+      patientName,
+      patientId,
       limit = 10,
       offset = 0,
       orderBy = 'releasedDate',
       orderDirection = 'DESC'
     } = options
 
+    const where = { doctorId, status, labStatus }
+    if (visitDateFrom || visitDateTo) {
+      where.createdAt = {}
+      if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
+      if (visitDateTo)   where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+    }
+
+    const patientWhere = {}
+    if (patientName) {
+      patientWhere[Op.or] = [
+        { firstName: { [Op.iLike]: `%${patientName}%` } },
+        { lastName:  { [Op.iLike]: `%${patientName}%` } }
+      ]
+    }
+    if (patientId) {
+      patientWhere.uuid = { [Op.iLike]: `${patientId}%` }
+    }
+
     const rows = await TestResultModel.findAll({
-      where: { doctorId, status, labStatus },
+      where,
       attributes: ['uuid', 'createdAt'],
       include: [
         {
           model: PatientModel,
           as: 'patient',
           required: true,
+          where: patientWhere,
           attributes: ['uuid', 'firstName', 'lastName']
         },
         {
