@@ -21,6 +21,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       field: 'test_result_id'
     },
+    docTemplateId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      field: 'doc_template_id'
+    },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -61,6 +66,11 @@ export default (sequelize, DataTypes) => {
     DocInstance.belongsTo(models.TestResult, {
       foreignKey: 'testResultId',
       as: 'testResult'
+    })
+
+    DocInstance.belongsTo(models.DocTemplate, {
+      foreignKey: 'docTemplateId',
+      as: 'docTemplate'
     })
   }
 

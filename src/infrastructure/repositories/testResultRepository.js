@@ -204,8 +204,8 @@ export default class TestResultRepository extends ITestResultRepository {
    * All tests for a patient, regardless of doc instance status.
    * Used by getMyReportStatus (patient self-view).
    */
-  static async findAllForPatient (patientId, options = {}) {
-    const { TestResult: TestResultModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel } = models
+  static async findAllForPatient (patientId, docTemplateType, options = {}) {
+    const { TestResult: TestResultModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel, DocTemplate: DocTemplateModel } = models
     const {
       limit = 10,
       offset = 0,
@@ -225,8 +225,17 @@ export default class TestResultRepository extends ITestResultRepository {
         {
           model: DocInstanceModel,
           as: 'docInstances',
-          attributes: ['uuid'],
-          required: false
+          attributes: ['uuid', 'status'],
+          required: false,
+          include: [
+            {
+              model: DocTemplateModel,
+              as: 'docTemplate',
+              attributes: [],
+              where: { type: docTemplateType },
+              required: true
+            }
+          ]
         }
       ],
       order: [[orderBy, orderDirection]],

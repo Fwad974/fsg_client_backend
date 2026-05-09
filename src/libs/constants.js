@@ -202,6 +202,11 @@ export const TEST_RESULT_STATUS = {
   COMPLETED:        'completed'
 }
 
+export const DOC_TEMPLATE_TYPE = {
+  RECORD_MANAGEMENT: 'recordManagement',
+  TEST_TRACKER:      'testTracker'
+}
+
 export const LAB_STATUS = {
   CFDNA:             'cfdna',
   LIBRARY:           'library',
