@@ -1165,3 +1165,11 @@ export const PdfNotGeneratedErrorType = {
   description: 'The PDF for this document has not been generated yet.',
   errorCode: 'PDF_NOT_GENERATED'
 }
+
+export const InvalidDateRangeErrorType = {
+  name: 'InvalidDateRange',
+  statusCode: StatusCodes.BAD_REQUEST,
+  isOperational: true,
+  description: 'From date must be on or before To date.',
+  errorCode: 'INVALID_DATE_RANGE'
+}

@@ -215,3 +215,14 @@ export const LAB_STATUS = {
   RECORD_MANAGEMENT: 'record-management'
 }
 
+export const SAMPLE_STATUS = {
+  REGISTERED: 'registered',
+  IN_TRANSIT: 'in_transit',
+  RECEIVED:   'received',
+  PROCESSING: 'processing',
+  STORED:     'stored',
+  RETRIEVED:  'retrieved',
+  DISCARDED:  'discarded',
+  REJECTED:   'rejected'
+}
+

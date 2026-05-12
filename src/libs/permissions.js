@@ -33,7 +33,11 @@ export const PERMISSION_TYPE = {
     'reports/download': 'REPORTS',
 
     // orderable catalog — corporate + doctor only
-    'tests/catalogs': 'TEST_CATALOG'
+    'tests/catalogs': 'TEST_CATALOG',
+
+    // corporate dashboard (CORPORATE-only)
+    'dashboard/overview':                   'CORPORATE',
+    'dashboard/test-category-distribution': 'CORPORATE'
   }
 }
 
