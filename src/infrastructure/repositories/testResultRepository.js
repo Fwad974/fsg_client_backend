@@ -1,6 +1,7 @@
 import ITestResultRepository from '../../domain/repositories/ITestResultRepository'
-import models from '../../db/models'
-import { Op } from 'sequelize'
+import models, { sequelize } from '../../db/models'
+import Sequelize, { Op, QueryTypes } from 'sequelize'
+import { TEST_RESULT_STATUS, LAB_STATUS, DOC_TEMPLATE_TYPE } from '../../libs/constants'
 
 export default class TestResultRepository extends ITestResultRepository {
   static async findById (id, options = {}) {
@@ -249,11 +250,70 @@ export default class TestResultRepository extends ITestResultRepository {
 
   static async create (createObject, transaction) {
     const { TestResult: TestResultModel } = models
+
     return await TestResultModel.create(createObject, { transaction })
   }
 
   static async update (id, updateObject, transaction) {
     const { TestResult: TestResultModel } = models
+
     return TestResultModel.update(updateObject, { where: { id }, transaction })
+  }
+
+  static async countByHospital (hospitalId, { from, to }) {
+    const { TestResult: TestResultModel } = models
+
+    return TestResultModel.count({
+      where: {
+        hospitalId,
+        createdAt: { [Op.between]: [from, to] }
+      }
+    })
+  }
+
+  static async countCompletedRecordMgmtMissingDocInstance (hospitalId, { from, to }) {
+    const { TestResult: TestResultModel } = models
+    return TestResultModel.count({
+      where: {
+        hospitalId,
+        status:    TEST_RESULT_STATUS.COMPLETED,
+        labStatus: LAB_STATUS.RECORD_MANAGEMENT,
+        createdAt: { [Op.between]: [from, to] },
+        [Op.and]: [
+          Sequelize.literal(`NOT EXISTS (
+            SELECT 1 FROM doc_instances di
+            JOIN doc_templates dt ON di.doc_template_id = dt.id
+            WHERE di.test_result_id = "TestResult".id
+              AND dt.type = '${DOC_TEMPLATE_TYPE.RECORD_MANAGEMENT}'
+          )`)
+        ]
+      }
+    })
+  }
+
+  static async countByCategoryMonthly (hospitalId, year) {
+    const rows = await sequelize.query(
+      `SELECT (EXTRACT(MONTH FROM tr.created_at)::int - 1) AS month,
+              tc.test_name AS "categoryName",
+              COUNT(*)::int AS count
+         FROM test_results tr
+         JOIN test_categories tc ON tr.test_category_id = tc.id
+        WHERE tr.hospital_id = :hospitalId
+          AND EXTRACT(YEAR FROM tr.created_at) = :year
+        GROUP BY 1, 2`,
+      { replacements: { hospitalId, year }, type: QueryTypes.SELECT }
+    )
+    return rows
+  }
+
+  static async findAvailableYearsByHospital (hospitalId) {
+    const rows = await sequelize.query(
+      `SELECT DISTINCT EXTRACT(YEAR FROM created_at)::int AS year
+         FROM test_results
+        WHERE hospital_id = :hospitalId
+        ORDER BY year ASC`,
+      { replacements: { hospitalId }, type: QueryTypes.SELECT }
+    )
+    return rows.map(r => r.year)
   }
 }
