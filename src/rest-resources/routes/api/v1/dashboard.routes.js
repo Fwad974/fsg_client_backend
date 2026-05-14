@@ -6,16 +6,18 @@ import { checkPermission } from '../../../middlewares/checkPermission.middleware
 import requestValidationMiddleware from '../../../middlewares/requestValidation.middleware'
 import responseValidationMiddleware from '../../../middlewares/responseValidation.middleware'
 
-const overviewSchemas = {
-  querySchema: {
-    type: 'object',
-    properties: {
-      from: { type: 'string', format: 'date' },
-      to:   { type: 'string', format: 'date' }
-    },
-    dependencies: { from: ['to'], to: ['from'] },
-    additionalProperties: false
+const dateWindowQuerySchema = {
+  type: 'object',
+  properties: {
+    from: { type: 'string', format: 'date' },
+    to: { type: 'string', format: 'date' }
   },
+  dependencies: { from: ['to'], to: ['from'] },
+  additionalProperties: false
+}
+
+const docStatusOverviewSchemas = {
+  querySchema: dateWindowQuerySchema,
   responseSchema: {
     default: {
       type: 'object',
@@ -24,46 +26,53 @@ const overviewSchemas = {
         data: {
           type: 'object',
           properties: {
-            docStatusOverview: {
-              type: 'object',
-              properties: {
-                total:    { type: 'number' },
-                segments: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      status:     { type: 'string', enum: ['received', 'pending-review', 'pending-approval', 'released'] },
-                      count:      { type: 'number' },
-                      percentage: { type: 'number' }
-                    },
-                    required: ['status', 'count', 'percentage']
-                  }
-                }
-              },
-              required: ['total', 'segments']
-            },
-            statusOverview: {
-              type: 'object',
-              properties: {
-                testCount:      { type: 'number' },
-                processingRate: { type: 'number' },
-                pendingAction:  { type: 'number' },
-                rejectedRate: {
-                  type: 'object',
-                  properties: {
-                    totalSamples:    { type: 'number' },
-                    rejectedSamples: { type: 'number' },
-                    rejectedRate:    { type: 'number' }
-                  },
-                  required: ['totalSamples', 'rejectedSamples', 'rejectedRate']
+            total: { type: 'number' },
+            segments: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  status: { type: 'string', enum: ['received', 'pending-review', 'pending-approval', 'released'] },
+                  count: { type: 'number' },
+                  percentage: { type: 'number' }
                 },
-                testConducted:  { type: 'number' }
-              },
-              required: ['testCount', 'processingRate', 'pendingAction', 'rejectedRate', 'testConducted']
+                required: ['status', 'count', 'percentage']
+              }
             }
           },
-          required: ['docStatusOverview', 'statusOverview']
+          required: ['total', 'segments']
+        }
+      },
+      required: ['message', 'data']
+    }
+  }
+}
+
+const kpiOverviewSchemas = {
+  querySchema: dateWindowQuerySchema,
+  responseSchema: {
+    default: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            testCount: { type: 'number' },
+            processingRate: { type: 'number' },
+            pendingAction: { type: 'number' },
+            rejectedRate: {
+              type: 'object',
+              properties: {
+                totalSamples: { type: 'number' },
+                rejectedSamples: { type: 'number' },
+                rejectedRate: { type: 'number' }
+              },
+              required: ['totalSamples', 'rejectedSamples', 'rejectedRate']
+            },
+            testConducted: { type: 'number' }
+          },
+          required: ['testCount', 'processingRate', 'pendingAction', 'rejectedRate', 'testConducted']
         }
       },
       required: ['message', 'data']
@@ -88,7 +97,7 @@ const testCategoryDistributionSchemas = {
           type: 'object',
           properties: {
             availableYears: { type: 'array', items: { type: 'number' } },
-            categories:     { type: 'array', items: { type: 'string' } },
+            categories: { type: 'array', items: { type: 'string' } },
             months: {
               type: 'array',
               items: {
@@ -116,13 +125,22 @@ const testCategoryDistributionSchemas = {
 
 const dashboardRoutes = express.Router()
 
-dashboardRoutes.route('/overview').get(
+dashboardRoutes.route('/doc-status-overview').get(
   contextMiddleware(false),
   authenticationMiddleware,
   checkPermission,
-  requestValidationMiddleware(overviewSchemas),
-  DashboardController.getOverview,
-  responseValidationMiddleware(overviewSchemas)
+  requestValidationMiddleware(docStatusOverviewSchemas),
+  DashboardController.getDocStatusOverview,
+  responseValidationMiddleware(docStatusOverviewSchemas)
+)
+
+dashboardRoutes.route('/kpi-overview').get(
+  contextMiddleware(false),
+  authenticationMiddleware,
+  checkPermission,
+  requestValidationMiddleware(kpiOverviewSchemas),
+  DashboardController.getKpiOverview,
+  responseValidationMiddleware(kpiOverviewSchemas)
 )
 
 dashboardRoutes.route('/test-category-distribution').get(

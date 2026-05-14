@@ -1,13 +1,24 @@
-import GetOverviewService from '../../services/dashboard/getOverview.service'
+import GetDocStatusOverviewService from '../../services/dashboard/getDocStatusOverview.service'
+import GetKpiOverviewService from '../../services/dashboard/getKpiOverview.service'
 import GetTestCategoryDistributionService from '../../services/dashboard/getTestCategoryDistribution.service'
-import GetOverviewPresenter from '../../presenters/dashboard/getOverview.presenter'
+import GetDocStatusOverviewPresenter from '../../presenters/dashboard/getDocStatusOverview.presenter'
+import GetKpiOverviewPresenter from '../../presenters/dashboard/getKpiOverview.presenter'
 import GetTestCategoryDistributionPresenter from '../../presenters/dashboard/getTestCategoryDistribution.presenter'
 import { sendResponse } from '../../helpers/response.helpers'
 
 export default class DashboardController {
-  static async getOverview (req, res, next) {
+  static async getDocStatusOverview (req, res, next) {
     try {
-      const { result, successful, errors } = await GetOverviewService.execute(req.query, req.context, GetOverviewPresenter)
+      const { result, successful, errors } = await GetDocStatusOverviewService.execute(req.query, req.context, GetDocStatusOverviewPresenter)
+      sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getKpiOverview (req, res, next) {
+    try {
+      const { result, successful, errors } = await GetKpiOverviewService.execute(req.query, req.context, GetKpiOverviewPresenter)
       sendResponse({ req, res, next }, { result, successful, serviceErrors: errors })
     } catch (error) {
       next(error)
