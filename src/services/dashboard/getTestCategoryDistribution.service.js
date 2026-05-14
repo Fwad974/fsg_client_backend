@@ -1,8 +1,7 @@
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
-import UserRepository from '../../infrastructure/repositories/userRepository'
 import TestResultRepository from '../../infrastructure/repositories/testResultRepository'
-import { ACCOUNT_TYPE } from '../../libs/constants'
+import ValidateUserHospitalService from '../user/helper/validateUserHospital.service'
 
 const schema = {
   type: 'object',
@@ -18,25 +17,25 @@ export default class GetTestCategoryDistributionService extends ServiceBase {
   get constraints () { return constraints }
 
   async run () {
-    const { logger, auth: { id: userId } } = this.context
+    const { logger } = this.context
     const effectiveYear = resolveYear(this.args.year)
+    logger.info('GetTestCategoryDistributionService: ', { message: 'Computing test-category monthly distribution', context: { year: JSON.stringify(effectiveYear) } })
 
-    logger.info('GetTestCategoryDistributionService: ', {
-      message: 'Computing test-category monthly distribution',
-      context: { userId: JSON.stringify(userId), year: effectiveYear }
-    })
-
-    const owner = await UserRepository.findByIdAndType(userId, ACCOUNT_TYPE.CORPORATE, { attributes: ['hospitalId'] })
-    if (!owner?.hospitalId) return this.addError('AccountNotLinkedErrorType')
+    const user = await ValidateUserHospitalService.run({}, this.context)
+    logger.info('GetTestCategoryDistributionService: ', { message: 'Hospital link confirmed', context: { user: JSON.stringify(user) } })
 
     const [rows, availableYears] = await Promise.all([
-      TestResultRepository.countByCategoryMonthly(owner.hospitalId, effectiveYear),
-      TestResultRepository.findAvailableYearsByHospital(owner.hospitalId)
+      TestResultRepository.countByCategoryMonthly(user.hospitalId, effectiveYear),
+      TestResultRepository.findAvailableYearsByHospital(user.hospitalId)
     ])
+    logger.info('GetTestCategoryDistributionService: ', { message: 'Test category rows and available years fetched', context: { rows: JSON.stringify(rows), availableYears: JSON.stringify(availableYears) } })
 
-    const { categoriesSet, countsByMonth, yearTotal } = aggregateRowsByMonthAndCategory(rows)
+    const aggregated = aggregateRowsByMonthAndCategory(rows)
+    logger.info('GetTestCategoryDistributionService: ', { message: 'Rows aggregated by month and category', context: { aggregated: JSON.stringify({ categoriesSet: [...aggregated.categoriesSet], countsByMonth: aggregated.countsByMonth, yearTotal: aggregated.yearTotal }) } })
+
+    const { categoriesSet, countsByMonth, yearTotal } = aggregated
     const categories = sortCategoriesAlphabetically(categoriesSet)
-    const months     = sortMonthsAscending(countsByMonth)
+    const months = sortMonthsAscending(countsByMonth)
 
     return { message: 'OK', availableYears, categories, months, yearTotal }
   }

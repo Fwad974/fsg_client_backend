@@ -1,16 +1,15 @@
 import ajv from '../../libs/ajv'
 import ServiceBase from '../../libs/serviceBase'
 import PatientRepository from '../../infrastructure/repositories/patientRepository'
-import UserRepository from '../../infrastructure/repositories/userRepository'
-import { ACCOUNT_TYPE } from '../../libs/constants'
+import ValidateUserHospitalService from '../user/helper/validateUserHospital.service'
 
 const schema = {
   type: 'object',
   properties: {
-    limit:          { type: 'number', minimum: 1, maximum: 100 },
-    offset:         { type: 'number', minimum: 0 },
-    search:         { type: 'string' },
-    orderBy:        { type: 'string' },
+    limit: { type: 'number', minimum: 1, maximum: 100 },
+    offset: { type: 'number', minimum: 0 },
+    search: { type: 'string' },
+    orderBy: { type: 'string' },
     orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
   }
 }
@@ -21,18 +20,17 @@ export default class GetCorporatePatientsService extends ServiceBase {
   get constraints () { return constraints }
 
   async run () {
-    const { logger, auth: { id: userId } } = this.context
+    const { logger } = this.context
     const { limit, offset, search, orderBy, orderDirection } = this.args
+    logger.info('GetCorporatePatientsService: ', { message: 'Listing patients linked to caller hospital via patient_hospitals', context: { args: JSON.stringify(this.args) } })
 
-    logger.info('GetCorporatePatientsService: ', { message: 'Listing patients linked to caller hospital via patient_hospitals', context: { userId: JSON.stringify(userId), args: JSON.stringify(this.args) } })
+    const user = await ValidateUserHospitalService.run({}, this.context)
+    logger.info('GetCorporatePatientsService: ', { message: 'Hospital link confirmed', context: { user: JSON.stringify(user) } })
 
-    const owner = await UserRepository.findByIdAndType(userId, ACCOUNT_TYPE.CORPORATE, { attributes: ['hospitalId'] })
-    if (!owner?.hospitalId) return this.addError('AccountNotLinkedErrorType')
+    const patients = await PatientRepository.findAllByHospitalId(user.hospitalId, { limit, offset, search, orderBy, orderDirection })
+    logger.info('GetCorporatePatientsService: ', { message: 'Hospital patient list fetched', context: { patients: JSON.stringify(patients) } })
 
-    const { rows, count } = await PatientRepository.findAllByHospitalId(owner.hospitalId, { limit, offset, search, orderBy, orderDirection })
-
-    logger.info('GetCorporatePatientsService: ', { message: 'Hospital patient list returned', context: { count: JSON.stringify(count) } })
-
+    const { rows, count } = patients
     return { message: 'OK', rows, count }
   }
 }
