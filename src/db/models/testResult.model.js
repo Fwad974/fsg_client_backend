@@ -99,6 +99,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'testResultId',
       as: 'docInstances'
     })
+    TestResult.hasMany(models.TestAlert, {
+      foreignKey: 'testResultId',
+      as: 'testAlerts'
+    })
   }
 
   return TestResult
