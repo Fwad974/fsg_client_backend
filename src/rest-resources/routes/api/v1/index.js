@@ -7,6 +7,7 @@ import patientRoutes from './patient.routes'
 import reportsRoutes from './reports.routes'
 import testsRoutes from './tests.routes'
 import contactRequestsRoutes from './contactRequests.routes'
+import dashboardRoutes from './dashboard.routes'
 
 const v1Router = express.Router()
 
@@ -17,5 +18,6 @@ v1Router.use('/patient', patientRoutes)
 v1Router.use('/reports', reportsRoutes)
 v1Router.use('/tests', testsRoutes)
 v1Router.use('/contact-requests', contactRequestsRoutes)
+v1Router.use('/dashboard', dashboardRoutes)
 
 export default v1Router

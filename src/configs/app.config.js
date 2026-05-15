@@ -32,7 +32,7 @@ const config = convict({
     name: {
       doc: 'Name of the service',
       format: String,
-      default: 'hortman-user-backend'
+      default: 'FSG-External'
     },
     url: {
       doc: 'URL of the service',
@@ -43,7 +43,7 @@ const config = convict({
     appName: {
       doc: 'Name of the application',
       format: String,
-      default: 'hortman',
+      default: 'FSG-External',
       env: 'APP_NAME'
     }
   },

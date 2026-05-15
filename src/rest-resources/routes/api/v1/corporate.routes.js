@@ -10,10 +10,10 @@ const getPatientsSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
-      offset:         { type: ['number', 'string'], minimum: 0 },
-      search:         { type: 'string' },
-      orderBy:        { type: 'string' },
+      limit: { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset: { type: ['number', 'string'], minimum: 0 },
+      search: { type: 'string' },
+      orderBy: { type: 'string' },
       orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
     }
   },
@@ -28,10 +28,10 @@ const getPatientsSchemas = {
             type: 'object',
             properties: {
               patientId: { $ref: '/patient.json#/properties/uuid' },
-              name:      { type: ['string', 'null'] },
+              name: { type: ['string', 'null'] },
               dateOfBirth: { $ref: '/patient.json#/properties/dateOfBirth' },
-              mobile:    { type: ['string', 'null'] },
-              email:     { $ref: '/patient.json#/properties/email' }
+              mobile: { type: ['string', 'null'] },
+              email: { $ref: '/patient.json#/properties/email' }
             }
           }
         },
@@ -46,10 +46,16 @@ const getPatientsReportSchemas = {
   querySchema: {
     type: 'object',
     properties: {
-      limit:          { type: ['number', 'string'], minimum: 1, maximum: 100 },
-      offset:         { type: ['number', 'string'], minimum: 0 },
-      orderBy:        { type: 'string' },
-      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] }
+      limit: { type: ['number', 'string'], minimum: 1, maximum: 100 },
+      offset: { type: ['number', 'string'], minimum: 0 },
+      orderBy: { type: 'string' },
+      orderDirection: { type: 'string', enum: ['ASC', 'DESC'] },
+      visitDateFrom: { type: 'string', format: 'date' },
+      visitDateTo: { type: 'string', format: 'date' },
+      reportingDateFrom: { type: 'string', format: 'date' },
+      reportingDateTo: { type: 'string', format: 'date' },
+      patientName: { type: 'string', minLength: 1 },
+      patientId: { type: 'string', minLength: 1 }
     }
   },
   responseSchema: {
@@ -62,12 +68,14 @@ const getPatientsReportSchemas = {
           items: {
             type: 'object',
             properties: {
-              patientId:       { $ref: '/patient.json#/properties/uuid' },
-              patientName:     { type: ['string', 'null'] },
-              visiteDate:      { $ref: '/testResult.json#/properties/createdAt' },
-              testDone:        { type: ['string', 'null'] },
-              reportDate:      { $ref: '/docInstance.json#/properties/releasedDate' },
-              docInstanceUuid: { $ref: '/docInstance.json#/properties/uuid' }
+              patientId: { $ref: '/patient.json#/properties/uuid' },
+              patientName: { type: ['string', 'null'] },
+              visiteDate: { $ref: '/testResult.json#/properties/createdAt' },
+              testDone: { type: ['string', 'null'] },
+              reportDate: { $ref: '/docInstance.json#/properties/releasedDate' },
+              docInstanceUuid: { $ref: '/docInstance.json#/properties/uuid' },
+              alertUuid: { type: 'string' },
+              alertType: { type: 'string' }
             }
           }
         },

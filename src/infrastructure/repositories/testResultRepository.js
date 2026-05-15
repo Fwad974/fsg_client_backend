@@ -1,6 +1,7 @@
 import ITestResultRepository from '../../domain/repositories/ITestResultRepository'
-import models from '../../db/models'
-import { Op } from 'sequelize'
+import models, { sequelize } from '../../db/models'
+import Sequelize, { Op, QueryTypes } from 'sequelize'
+import { TEST_RESULT_STATUS, LAB_STATUS, DOC_TEMPLATE_TYPE, ALERT_TYPE } from '../../libs/constants'
 
 export default class TestResultRepository extends ITestResultRepository {
   static async findById (id, options = {}) {
@@ -29,7 +30,7 @@ export default class TestResultRepository extends ITestResultRepository {
     if (search) {
       patientWhere[Op.or] = [
         { firstName: { [Op.iLike]: `%${search}%` } },
-        { lastName:  { [Op.iLike]: `%${search}%` } }
+        { lastName: { [Op.iLike]: `%${search}%` } }
       ]
     }
 
@@ -63,25 +64,48 @@ export default class TestResultRepository extends ITestResultRepository {
    * Used by getCorporatePatientsReport.
    */
   static async findCompletedReleasedByHospitalId (hospitalId, options = {}) {
-    const { TestResult: TestResultModel, Patient: PatientModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel } = models
+    const { TestResult: TestResultModel, Patient: PatientModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel, TestAlert: TestAlertModel } = models
     const {
       status,
       labStatus,
       docInstanceStatus,
+      visitDateFrom,
+      visitDateTo,
+      patientName,
+      patientId,
       limit = 10,
       offset = 0,
       orderBy = 'releasedDate',
       orderDirection = 'DESC'
     } = options
 
+    const where = { hospitalId, status, labStatus }
+    if (visitDateFrom || visitDateTo) {
+      where.createdAt = {}
+      if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
+      if (visitDateTo) where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+    }
+
+    const patientWhere = {}
+    if (patientName) {
+      patientWhere[Op.or] = [
+        { firstName: { [Op.iLike]: `%${patientName}%` } },
+        { lastName: { [Op.iLike]: `%${patientName}%` } }
+      ]
+    }
+    if (patientId) {
+      patientWhere.uuid = { [Op.iLike]: `${patientId}%` }
+    }
+
     const rows = await TestResultModel.findAll({
-      where: { hospitalId, status, labStatus },
+      where,
       attributes: ['uuid', 'createdAt'],
       include: [
         {
           model: PatientModel,
           as: 'patient',
           required: true,
+          where: patientWhere,
           attributes: ['uuid', 'firstName', 'lastName']
         },
         {
@@ -95,6 +119,13 @@ export default class TestResultRepository extends ITestResultRepository {
           required: true,
           where: { status: docInstanceStatus },
           attributes: ['uuid', 'releasedDate']
+        },
+        {
+          model: TestAlertModel,
+          as: 'testAlerts',
+          required: false,
+          where: { alertType: ALERT_TYPE.CRITICAL_REPORT, downloadAcknowledgedAt: null },
+          attributes: ['uuid', 'alertType']
         }
       ],
       order: [[{ model: DocInstanceModel, as: 'docInstances' }, orderBy, orderDirection]],
@@ -116,20 +147,43 @@ export default class TestResultRepository extends ITestResultRepository {
       status,
       labStatus,
       docInstanceStatus,
+      visitDateFrom,
+      visitDateTo,
+      patientName,
+      patientId,
       limit = 10,
       offset = 0,
       orderBy = 'releasedDate',
       orderDirection = 'DESC'
     } = options
 
+    const where = { doctorId, status, labStatus }
+    if (visitDateFrom || visitDateTo) {
+      where.createdAt = {}
+      if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
+      if (visitDateTo) where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+    }
+
+    const patientWhere = {}
+    if (patientName) {
+      patientWhere[Op.or] = [
+        { firstName: { [Op.iLike]: `%${patientName}%` } },
+        { lastName: { [Op.iLike]: `%${patientName}%` } }
+      ]
+    }
+    if (patientId) {
+      patientWhere.uuid = { [Op.iLike]: `${patientId}%` }
+    }
+
     const rows = await TestResultModel.findAll({
-      where: { doctorId, status, labStatus },
+      where,
       attributes: ['uuid', 'createdAt'],
       include: [
         {
           model: PatientModel,
           as: 'patient',
           required: true,
+          where: patientWhere,
           attributes: ['uuid', 'firstName', 'lastName']
         },
         {
@@ -158,8 +212,8 @@ export default class TestResultRepository extends ITestResultRepository {
    * All tests for a patient, regardless of doc instance status.
    * Used by getMyReportStatus (patient self-view).
    */
-  static async findAllForPatient (patientId, options = {}) {
-    const { TestResult: TestResultModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel } = models
+  static async findAllForPatient (patientId, docTemplateType, options = {}) {
+    const { TestResult: TestResultModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel, DocTemplate: DocTemplateModel } = models
     const {
       limit = 10,
       offset = 0,
@@ -179,8 +233,17 @@ export default class TestResultRepository extends ITestResultRepository {
         {
           model: DocInstanceModel,
           as: 'docInstances',
-          attributes: ['uuid'],
-          required: false
+          attributes: ['uuid', 'status'],
+          required: false,
+          include: [
+            {
+              model: DocTemplateModel,
+              as: 'docTemplate',
+              attributes: [],
+              where: { type: docTemplateType },
+              required: true
+            }
+          ]
         }
       ],
       order: [[orderBy, orderDirection]],
@@ -194,11 +257,70 @@ export default class TestResultRepository extends ITestResultRepository {
 
   static async create (createObject, transaction) {
     const { TestResult: TestResultModel } = models
+
     return await TestResultModel.create(createObject, { transaction })
   }
 
   static async update (id, updateObject, transaction) {
     const { TestResult: TestResultModel } = models
+
     return TestResultModel.update(updateObject, { where: { id }, transaction })
+  }
+
+  static async countByHospital (hospitalId, { from, to }) {
+    const { TestResult: TestResultModel } = models
+
+    return TestResultModel.count({
+      where: {
+        hospitalId,
+        createdAt: { [Op.between]: [from, to] }
+      }
+    })
+  }
+
+  static async countCompletedRecordMgmtMissingDocInstance (hospitalId, { from, to }) {
+    const { TestResult: TestResultModel } = models
+    return TestResultModel.count({
+      where: {
+        hospitalId,
+        status: TEST_RESULT_STATUS.COMPLETED,
+        labStatus: LAB_STATUS.RECORD_MANAGEMENT,
+        createdAt: { [Op.between]: [from, to] },
+        [Op.and]: [
+          Sequelize.literal(`NOT EXISTS (
+            SELECT 1 FROM doc_instances di
+            JOIN doc_templates dt ON di.doc_template_id = dt.id
+            WHERE di.test_result_id = "TestResult".id
+              AND dt.type = '${DOC_TEMPLATE_TYPE.RECORD_MANAGEMENT}'
+          )`)
+        ]
+      }
+    })
+  }
+
+  static async countByCategoryMonthly (hospitalId, year) {
+    const rows = await sequelize.query(
+      `SELECT (EXTRACT(MONTH FROM tr.created_at)::int - 1) AS month,
+              tc.test_name AS "categoryName",
+              COUNT(*)::int AS count
+         FROM test_results tr
+         JOIN test_categories tc ON tr.test_category_id = tc.id
+        WHERE tr.hospital_id = :hospitalId
+          AND EXTRACT(YEAR FROM tr.created_at) = :year
+        GROUP BY 1, 2`,
+      { replacements: { hospitalId, year }, type: QueryTypes.SELECT }
+    )
+    return rows
+  }
+
+  static async findAvailableYearsByHospital (hospitalId) {
+    const rows = await sequelize.query(
+      `SELECT DISTINCT EXTRACT(YEAR FROM created_at)::int AS year
+         FROM test_results
+        WHERE hospital_id = :hospitalId
+        ORDER BY year ASC`,
+      { replacements: { hospitalId }, type: QueryTypes.SELECT }
+    )
+    return rows.map(r => r.year)
   }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 export default (sequelize, DataTypes) => {
-  const DocInstance = sequelize.define('DocInstance', {
+  const TestAlert = sequelize.define('TestAlert', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -21,58 +21,55 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       field: 'test_result_id'
     },
-    docTemplateId: {
+    alertType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'alert_type'
+    },
+    acknowledgedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'acknowledged_at'
+    },
+    acknowledgedByUserId: {
       type: DataTypes.BIGINT,
-      allowNull: false,
-      field: 'doc_template_id'
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'status'
-    },
-    pdfFilePath: {
-      type: DataTypes.STRING,
       allowNull: true,
-      field: 'pdf_file_path'
+      field: 'acknowledged_by_user_id'
     },
-    releasedDate: {
+    downloadAcknowledgedAt: {
       type: DataTypes.DATE,
       allowNull: true,
-      field: 'released_date'
+      field: 'download_acknowledged_at'
     },
-    reportedDate: {
-      type: DataTypes.DATE,
+    downloadAcknowledgedByUserId: {
+      type: DataTypes.BIGINT,
       allowNull: true,
-      field: 'reported_date'
+      field: 'download_acknowledged_by_user_id'
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      field: 'updated_at'
     }
   }, {
     sequelize,
     underscored: true,
-    tableName: 'doc_instances',
+    tableName: 'test_alerts',
     schema: 'public',
     timestamps: true
   })
 
-  DocInstance.associate = models => {
-    DocInstance.belongsTo(models.TestResult, {
+  TestAlert.associate = models => {
+    TestAlert.belongsTo(models.TestResult, {
       foreignKey: 'testResultId',
       as: 'testResult'
     })
-
-    DocInstance.belongsTo(models.DocTemplate, {
-      foreignKey: 'docTemplateId',
-      as: 'docTemplate'
-    })
   }
 
-  return DocInstance
+  return TestAlert
 }

@@ -24,7 +24,7 @@ export default class GetTestCatalogService extends ServiceBase {
 
     logger.info('GetTestCatalogService: ', { message: 'Fetching orderable test catalog', context: { args: JSON.stringify(this.args) } })
 
-    const { rows, count } = await TestCategoryRepository.findAndCountAll({ search, limit, offset, orderBy, orderDirection, attributes: ['testName', 'testCode', 'tat'] })
+    const { rows, count } = await TestCategoryRepository.findAndCountAll({ search, limit, offset, orderBy, orderDirection, attributes: ['testName', 'testCode', 'tat', 'specimenType', 'description'] })
 
     logger.info('GetTestCatalogService: ', { message: 'Test catalog returned', context: { count: JSON.stringify(count) } })
 
