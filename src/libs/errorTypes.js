@@ -61,8 +61,6 @@ export const InvalidCredentialsErrorType = {
   errorCode: 3007
 }
 
-
-
 export const InvalidSessionErrorType = {
   name: 'InvalidSession',
   statusCode: StatusCodes.UNAUTHORIZED,
@@ -87,8 +85,6 @@ export const NonOperationalErrorType = {
   errorCode: 3011
 }
 
-
-
 export const InvalidActionErrorType = {
   name: 'InvalidAction',
   statusCode: StatusCodes.BAD_REQUEST,
@@ -112,8 +108,6 @@ export const SessionNotStartedErrorType = {
   description: 'The session has not started.',
   errorCode: 3015
 }
-
-
 
 export const InvalidGameTypeErrorType = {
   name: 'InvalidGameTypeError',
@@ -215,8 +209,6 @@ export const NonceLifetimeExpiredErrorType = {
   errorCode: 3029
 }
 
-
-
 export const AccountNotActiveErrorType = {
   name: 'AccountNotActive',
   statusCode: StatusCodes.UNAUTHORIZED,
@@ -288,8 +280,6 @@ export const InvalidAffiliateCodeErrorType = {
   description: 'The affiliate code is invalid.',
   errorCode: 3039
 }
-
-
 
 export const WithdrawalRequestAlreadyPendingErrorType = {
   name: 'WithdrawalRequestAlreadyPending',
@@ -482,8 +472,6 @@ export const DemoNotExistErrorType = {
   description: 'Demo mode is not available for this game.',
   errorCode: 3064
 }
-
-
 
 export const ExceedChatLengthErrorType = {
   name: 'ExceedChatLengthErrorType',
@@ -1012,48 +1000,6 @@ export const SoftswissSignatureIsMissingErrorType = {
   errorCode: 31013
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const SomethingWentWrongErrorType = {
   name: 'SomethingWentWrong',
   statusCode: StatusCodes.FORBIDDEN,
@@ -1172,4 +1118,12 @@ export const InvalidDateRangeErrorType = {
   isOperational: true,
   description: 'From date must be on or before To date.',
   errorCode: 'INVALID_DATE_RANGE'
+}
+
+export const TestAlertsNotResolvableErrorType = {
+  name: 'TestAlertsNotResolvable',
+  statusCode: StatusCodes.NOT_FOUND,
+  isOperational: true,
+  description: 'One or more test alert uuids were not found, already acknowledged, or do not belong to this hospital.',
+  errorCode: 'TEST_ALERTS_NOT_RESOLVABLE'
 }

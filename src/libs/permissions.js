@@ -38,12 +38,15 @@ export const PERMISSION_TYPE = {
     // corporate dashboard (CORPORATE-only)
     'dashboard/doc-status-overview': 'CORPORATE',
     'dashboard/kpi-overview': 'CORPORATE',
-    'dashboard/test-category-distribution': 'CORPORATE'
+    'dashboard/test-category-distribution': 'CORPORATE',
+    'dashboard/pending-actions': 'CORPORATE',
+    'dashboard/pending-actions/acknowledge': 'CORPORATE',
+    'dashboard/pending-actions/acknowledge-download': 'CORPORATE'
   }
 }
 
 export const PERMISSIONS = {
-  CORPORATE: ['R'],
+  CORPORATE: ['R', 'U'],
   DOCTOR: ['R'],
   PATIENT: ['R'],
   ACCOUNTANT: ['R'],
