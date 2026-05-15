@@ -1,7 +1,7 @@
 import ITestResultRepository from '../../domain/repositories/ITestResultRepository'
 import models, { sequelize } from '../../db/models'
 import Sequelize, { Op, QueryTypes } from 'sequelize'
-import { TEST_RESULT_STATUS, LAB_STATUS, DOC_TEMPLATE_TYPE } from '../../libs/constants'
+import { TEST_RESULT_STATUS, LAB_STATUS, DOC_TEMPLATE_TYPE, ALERT_TYPE } from '../../libs/constants'
 
 export default class TestResultRepository extends ITestResultRepository {
   static async findById (id, options = {}) {
@@ -30,7 +30,7 @@ export default class TestResultRepository extends ITestResultRepository {
     if (search) {
       patientWhere[Op.or] = [
         { firstName: { [Op.iLike]: `%${search}%` } },
-        { lastName:  { [Op.iLike]: `%${search}%` } }
+        { lastName: { [Op.iLike]: `%${search}%` } }
       ]
     }
 
@@ -64,7 +64,7 @@ export default class TestResultRepository extends ITestResultRepository {
    * Used by getCorporatePatientsReport.
    */
   static async findCompletedReleasedByHospitalId (hospitalId, options = {}) {
-    const { TestResult: TestResultModel, Patient: PatientModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel } = models
+    const { TestResult: TestResultModel, Patient: PatientModel, TestCategory: TestCategoryModel, DocInstance: DocInstanceModel, TestAlert: TestAlertModel } = models
     const {
       status,
       labStatus,
@@ -83,14 +83,14 @@ export default class TestResultRepository extends ITestResultRepository {
     if (visitDateFrom || visitDateTo) {
       where.createdAt = {}
       if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
-      if (visitDateTo)   where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+      if (visitDateTo) where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
     }
 
     const patientWhere = {}
     if (patientName) {
       patientWhere[Op.or] = [
         { firstName: { [Op.iLike]: `%${patientName}%` } },
-        { lastName:  { [Op.iLike]: `%${patientName}%` } }
+        { lastName: { [Op.iLike]: `%${patientName}%` } }
       ]
     }
     if (patientId) {
@@ -119,6 +119,13 @@ export default class TestResultRepository extends ITestResultRepository {
           required: true,
           where: { status: docInstanceStatus },
           attributes: ['uuid', 'releasedDate']
+        },
+        {
+          model: TestAlertModel,
+          as: 'testAlerts',
+          required: false,
+          where: { alertType: ALERT_TYPE.CRITICAL_REPORT, downloadAcknowledgedAt: null },
+          attributes: ['uuid', 'alertType']
         }
       ],
       order: [[{ model: DocInstanceModel, as: 'docInstances' }, orderBy, orderDirection]],
@@ -154,14 +161,14 @@ export default class TestResultRepository extends ITestResultRepository {
     if (visitDateFrom || visitDateTo) {
       where.createdAt = {}
       if (visitDateFrom) where.createdAt[Op.gte] = new Date(visitDateFrom)
-      if (visitDateTo)   where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
+      if (visitDateTo) where.createdAt[Op.lte] = new Date(`${visitDateTo}T23:59:59.999Z`)
     }
 
     const patientWhere = {}
     if (patientName) {
       patientWhere[Op.or] = [
         { firstName: { [Op.iLike]: `%${patientName}%` } },
-        { lastName:  { [Op.iLike]: `%${patientName}%` } }
+        { lastName: { [Op.iLike]: `%${patientName}%` } }
       ]
     }
     if (patientId) {
@@ -276,7 +283,7 @@ export default class TestResultRepository extends ITestResultRepository {
     return TestResultModel.count({
       where: {
         hospitalId,
-        status:    TEST_RESULT_STATUS.COMPLETED,
+        status: TEST_RESULT_STATUS.COMPLETED,
         labStatus: LAB_STATUS.RECORD_MANAGEMENT,
         createdAt: { [Op.between]: [from, to] },
         [Op.and]: [
